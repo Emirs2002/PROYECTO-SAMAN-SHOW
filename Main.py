@@ -22,12 +22,12 @@ def main():
             \n6.- Salir
             \n==>''') 
 
-        if op == 1:
+        if op == 1: 
             while True:
                 op1 = check_op(1, 3, '''Ingrese la opción que desea realizar:
                             \n1.-Ver todos los eventos
                             \n2.-Buscar eventos por filtro
-                            \n3.-Volver al menú''')
+                            \n3.-Volver al menú \n-->''')
                 if op1 == 1:
                     show_events(db, lista_eventos)
                     
@@ -36,8 +36,11 @@ def main():
                                     \n1.-Tipo
                                     \n2.-Fecha
                                     \n3.-Actor o cantante
-                                    \n4.-Nombre''')
+                                    \n4.-Nombre \n-->''')
                     if filtro == 1:
+                        search_event(db, filtro, lista_eventos)
+                    
+                    if filtro == 4:
                         search_event(db, filtro, lista_eventos)
 
                 if op1 == 3:

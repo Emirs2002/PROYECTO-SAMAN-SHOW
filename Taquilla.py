@@ -1,4 +1,5 @@
 
+from calendar import c
 from Musical import Musical
 from Teatro import Teatro
 from tools import *
@@ -26,11 +27,11 @@ def show_events(db, lista):
     lista_events = assign_events(db, lista)
 
     #Se muestra la información ordenadamente.
+    print("")
     print("    -----------EVENTOS-------------     ")
+    print("")
     for eve in range(len(lista_events)):
-        print("")
-        print("-----------------------------------------------------")
-        print("")
+        
         print(f'''-Nombre: {lista_events[eve].get_nombre_evento()}
                 \n-Fecha: {lista_events[eve].get_fecha()}''')
         if lista_events[eve].get_tipo() == 1:
@@ -46,9 +47,13 @@ def show_events(db, lista):
         print("")
         print("-Precios:")
         print(f"*General: ${lista_events[eve].get_precio()[0]}")
-        print(f"*VIP: ${lista_events[eve].get_precio()[1]}")                
+        print(f"*VIP: ${lista_events[eve].get_precio()[1]}")    
+
+        print("")
+        print("-----------------------------------------------------")
+        print("")            
    
-def search_event(db, num, lista): #preguntar por qué filtro desea buscar
+def search_event(db, num, lista): #preguntar por cuál filtro desea buscar
 
     lista_events = assign_events(db, lista)
 
@@ -56,13 +61,44 @@ def search_event(db, num, lista): #preguntar por qué filtro desea buscar
     if num == 1: 
         op = check_op(1, 2, '''Seleccione el tipo de evento:
                             \n1.-Musical
-                            \n2.-Obra de teatro''')
-        if op == 1:
-            for event in range(len(lista_events)): 
-                pass
+                            \n2.-Obra de teatro\n-->''')
+        print("Resultados de su búsqueda:")
+        for event in range(len(lista_events)): 
+            if lista_events[event].get_tipo() == op:
+                print("")
+                print(f'''-Nombre: {lista_events[event].get_nombre_evento()}''')
+                print("---------------------------------------------------------")
 
-        if op == 2:
-            pass
+            
+    
+########### N O M B R E ##########
+    if num == 4:
+        
+        op_nom = check_let("Ingrese el nombre del evento que desea buscar:\n==>")
+
+        inside_lista = False
+        for event in range(len(lista_events)): 
+            if lista_events[event].get_nombre_evento() == op_nom:
+                inside_lista = True
+                print("")
+                print(f'''-Nombre: {lista_events[event].get_nombre_evento()}
+                        \n-Fecha: {lista_events[event].get_fecha()}''')
+                print("")
+                for cart in range(len(lista_events[event].get_cartel())):
+                    print(f"--> {lista_events[event].get_cartel()[cart]}")
+                print("")
+                print("-Precios:")
+                print(f"*General: ${lista_events[event].get_precio()[0]}")
+                print(f"*VIP: ${lista_events[event].get_precio()[1]}")    
+                break
+            
+        if inside_lista == False:
+            print("Ha ingresado un nombre inválido, intente nuevamente.")
+
+        
+
+
+    
 
         
         
