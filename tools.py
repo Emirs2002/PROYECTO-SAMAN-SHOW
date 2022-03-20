@@ -114,8 +114,6 @@ def quick_sort(lista):    #FIXME PONERLO A TRABAJAR CON OBJETOS EN GENERAL
             menores.append(lista[student])
     return quick_sort(mayores) + [objeto] + quick_sort(menores)
 
-
-
 ### Hacer matrices de filas y columnas especificadas por el usuario ### 
 
 def matrix(filas, columnas, let):
