@@ -9,8 +9,6 @@ class Taquilla():
     def get_db(self):
         return self.__db
 
-    #ANCHOR FUNCIONA PERFECTAMENTE
-
     def show_events(self):         #Enseña todos los eventos en la base de datos  
         
         lista_events = self.__db
@@ -61,10 +59,12 @@ class Taquilla():
         
     def search_event(self, num): #Busca el evento de acuerdo al filtro introducido por el usuario
 
-        lista_events = self.__db
+        lista_events = self.__db                   
+                                
+                                #NOTE COMENTAR TODA ESTA PARTE DEL CÓDIGO
 
-    #########    T I P O   ########
-    
+    #########   T I P O   ########  
+
         if num == 1: 
             lista_tipo = []
             op = check_op(1, 2, '''Seleccione el tipo de evento:
@@ -80,43 +80,49 @@ class Taquilla():
             return lista_tipo
                     
 
-    #######   F E C H A   #######
+    #######   F E C H A   #######     #Únicamente busca por mes
         if num == 2: 
-            pass
-
-
-    #######  ACTOR O CANTANTE   #######  
-        if num == 3: 
-            pass
-
-
-    ########### N O M B R E ##########   #REVIEW ver si se puede utilizar show eventos en vez de copiar todo otra vez
-        if num == 4:
+            lista_fecha = []
+            mes = check_num("Ingrese el mes del evento (Intoducir dos dígitos. Ejemplo: abril = '04'):\n==>")
             
-            op_nom = check_let("Ingrese el nombre del evento que desea buscar:\n==>")  
+            mes = str(mes)
 
-            inside_lista = False
             for event in range(len(lista_events)): 
-                if lista_events[event].get_nombre_evento() == op_nom:
-                    inside_lista = True
-                    break  
-                
-            if inside_lista == False:
-                print("Ha ingresado un nombre inválido, intente nuevamente.")
 
-            elif inside_lista == True:
-                print("")
-                print(f'''-Nombre: {lista_events[event].get_nombre_evento()}
-                        \n-Fecha: {lista_events[event].get_fecha()}''')
-                print("")
-                for cart in range(len(lista_events[event].get_cartel())):
-                    print(f"--> {lista_events[event].get_cartel()[cart]}")
-                print("")
-                print("-Precios:")
-                print(f"*General: ${lista_events[event].get_precio()[0]}")
-                print(f"*VIP: ${lista_events[event].get_precio()[1]}")    
-                
+                lista = lista_events[event].get_fecha().split("-")
+
+                for fecha in range(len(lista)):
+                    if lista[fecha] == mes:
+                        lista_fecha.append(lista_events[event])
             
+            return lista_fecha
+
+    #######  ACTOR O CANTANTE   #######   
+        if num == 3: 
+            lista_performer = []
+
+            op_performer = check_let('''Ingrese el nombre del actor o cantante:   
+                                \n==>''')  
+            for event in range(len(lista_events)):               
+                for performer in range(len(lista_events[event].get_cartel())):
+                    if lista_events[event].get_cartel()[performer] == op_performer:
+                        lista_performer.append(lista_events[event])
+
+            return lista_performer
+
+    ########### N O M B R E ##########   
+
+        if num == 4:
+            lista_nombre = []             #FIXME ARREGLAR LA VALIDACIÓN DE STR PARA EL SÍMBOLO "&"
+            
+            op_nom = check_let('''Ingrese el nombre del evento que desea buscar:   
+                                \n==>''')  
+         
+            for event in range(len(lista_events)): 
+                if lista_events[event].get_nombre_evento() == op_nom:                    
+                    lista_nombre.append(lista_events[event])  
+            
+            return lista_nombre
 
 
         
