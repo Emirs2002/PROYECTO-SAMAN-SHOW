@@ -5,11 +5,12 @@ def main():
     
     lista_eventos = []
     clients_db = []
-    
+
     lista_eventos = Taquilla(assign_event(lista_eventos))
-
-
+ 
     while True:
+
+       
 
         print("")
         print("***BIENVENIDO A SAMAN SHOW***")
@@ -39,8 +40,9 @@ def main():
                                     \n2.-Fecha   
                                     \n3.-Actor o cantante
                                     \n4.-Nombre \n-->''')     #NOTE cómo es eso de buscar por fecha
-                    if filtro == 1:
-                        lista_eventos.search_event(filtro)
+                    if filtro == 1:                        
+                        lista = Taquilla(lista_eventos.search_event(filtro))  #busca los eventos por tipo y devuelve una lista con los objetos que tengan el atributo especificado
+                        lista.show_events()                                   # esta lista se convierte en objeto Taquilla y se le aplica el método show_events para enseñar la información en pantalla
 
                     if filtro == 2:
                         lista_eventos.search_event(filtro)
