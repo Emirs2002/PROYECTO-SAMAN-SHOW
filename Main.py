@@ -1,5 +1,7 @@
 from tools import *
-from Cartelera import *
+from Cartelera import Cartelera
+from Taquilla import Taquilla
+
 
 def main():
     
@@ -7,7 +9,9 @@ def main():
     clients_db = []
 
     lista_eventos = Cartelera(assign_event(lista_eventos))
- 
+    
+    clients_db = Taquilla(read_db("Clientes_tickets.txt", clients_db))
+    
     while True:
 
         print("")
@@ -53,8 +57,8 @@ def main():
                     break
 
 
-        if op == 2:       #Venta de tickets
-            pass
+        if op == 2:       #MÓDULO 2: Venta de tickets
+            clients_db.comprar_tickets(lista_eventos)
 
         if op == 6:
             print("¡Hasta pronto!")
