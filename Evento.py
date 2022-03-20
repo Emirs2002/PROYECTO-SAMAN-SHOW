@@ -2,7 +2,7 @@ class Evento():
     def __init__(self, nombre_evento, cartel, asientos, fecha, precio, tipo):
         self.__nombre_evento = nombre_evento
         self.__cartel = cartel
-        self.__asientos = []
+        self.__asientos = asientos
         self.__fecha = fecha
         self.__precio = precio
         self.__tipo = tipo

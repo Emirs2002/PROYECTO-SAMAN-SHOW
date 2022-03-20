@@ -3,6 +3,8 @@ import pickle
 import os
 import requests   
 import json
+from Musical import Musical
+from Teatro import Teatro
 
 
 #validar palabras
@@ -74,11 +76,50 @@ def load_db(txt, datos):
 
 # JSON
      
-def get_json():
+def assign_event(lista_events):
     url = "https://raw.githubusercontent.com/Algoritmos-y-Programacion/api_saman_show/main/api.json"
     response = requests.get(url)
 
     if response.status_code == 200:
-        db = response.json()
+        db = response.json()       
+                                       
+        for event in range(len(db["events"])):         #Añadir los elementos del JSON a los objetos Musical y Teatro respectivamente 
+            if db["events"][event]["type"] == 1:
+                musical_obj = Musical(nombre_evento = db["events"][event]["title"], cartel = db["events"][event]["cartel"], asientos = db["events"][event]["layout"], fecha = db["events"][event]["date"], num_bandas = db["events"][event]["bands"], precio = db["events"][event]["prices"], tipo = db["events"][event]["type"])
+                lista_events.append(musical_obj)
+                
+            elif db["events"][event]["type"] == 2:
+                teatro_obj = Teatro(nombre_evento = db["events"][event]["title"], cartel =db["events"][event]["cartel"], asientos = db["events"][event]["layout"], fecha = db["events"][event]["date"], precio = db["events"][event]["prices"], sinopsis = db["events"][event]["synopsis"], tipo = db["events"][event]["type"])
+                lista_events.append(teatro_obj)
+        
+        return lista_events
+
+###  Ordenar los objetos por un parámetro introducido ###
+
+def quicksort(db):
+
+    if len(db) <= 1:
         return db
     
+    menores = []
+    mayores = []
+    pivote = db[0]
+    for num in range(1, len(db)):
+        if db[num] > pivote:
+            mayores.append(db[num])
+        else:
+            menores.append(db[num])
+
+    return quicksort(menores) + [pivote] + quicksort(mayores)
+
+### Hacer matrices de filas y columnas especificadas por el usuario ### 
+
+def matrix(filas, columnas, let):
+    for fila in range(1, filas+1):
+        for columna in range(1, columnas+1):
+            if columna == 1:
+                print(f"{let}{fila}-{columna}", end=" ")
+            else:
+                print(f" {let}{fila}-{columna}", end=" ")
+        print("")
+        
