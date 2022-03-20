@@ -59,20 +59,37 @@ class Taquilla():
             print("-----------------------------------------------------")
             print("") 
         
-    def search_event(num, lista_events): #preguntar por cuál filtro desea buscar
+    def search_event(self, num): #Busca el evento de acuerdo al filtro introducido por el usuario
+
+        lista_events = self.__db
 
     #########    T I P O   ########
     
         if num == 1: 
+            lista_tipo = []
             op = check_op(1, 2, '''Seleccione el tipo de evento:
                                 \n1.-Musical
                                 \n2.-Obra de teatro\n-->''')
             print("Resultados de su búsqueda:")
             for event in range(len(lista_events)): 
-                if lista_events[event].get_tipo() == op:   
-                    pass
+                if lista_events[event].get_tipo() == op: 
+                    lista_tipo.append(lista_events[event])
+                else:
+                    continue
+            
+            return lista_tipo
                     
-        
+
+    #######   F E C H A   #######
+        if num == 2: 
+            pass
+
+
+    #######  ACTOR O CANTANTE   #######  
+        if num == 3: 
+            pass
+
+
     ########### N O M B R E ##########   #REVIEW ver si se puede utilizar show eventos en vez de copiar todo otra vez
         if num == 4:
             
