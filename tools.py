@@ -127,3 +127,5 @@ def matrix(filas, columnas, let):
                 print(f" {let}{fila}-{columna}", end=" ")
         print("")
         
+def check_vampire(num):
+    pass

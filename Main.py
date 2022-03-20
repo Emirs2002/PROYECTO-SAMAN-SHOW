@@ -1,12 +1,12 @@
 from tools import *
-from Taquilla import *
+from Cartelera import *
 
 def main():
     
     lista_eventos = []
     clients_db = []
 
-    lista_eventos = Taquilla(assign_event(lista_eventos))
+    lista_eventos = Cartelera(assign_event(lista_eventos))
  
     while True:
 
@@ -16,9 +16,9 @@ def main():
                               #Menú principal
         op = check_op(1, 6, '''Ingrese la opción que desea realizar:
             \n1.- Ver eventos
-            \n2.- Venta de Tickets
-            \n3.- Ver alimentos
-            \n4.- Venta Feria
+            \n2.- Comprar Tickets
+            \n3.- Ver artículos de la feria
+            \n4.- Venta de la Feria
             \n5.- Estadísticas
             \n6.- Salir
             \n==>''') 
@@ -28,7 +28,8 @@ def main():
                 op1 = check_op(1, 3, '''Ingrese la opción que desea realizar:      
                             \n1.-Ver todos los eventos
                             \n2.-Buscar eventos por filtro
-                            \n3.-Volver al menú \n-->''')
+                            \n3.-Volver al menú 
+                            \n-->''')
                 if op1 == 1:
                     lista_eventos.show_events()          #Muestra todos los eventos con su respectiva información
                     
@@ -37,26 +38,26 @@ def main():
                                     \n1.-Tipo
                                     \n2.-Fecha   
                                     \n3.-Actor o cantante
-                                    \n4.-Nombre \n-->''')     
+                                    \n4.-Nombre 
+                                    \n-->''')     
                                             
-                    lista = Taquilla(lista_eventos.search_event(filtro))  #busca los eventos por tipo y devuelve una lista con los objetos que tengan el atributo especificado
-                    if lista.get_db() == []:
+                    lista = Cartelera(lista_eventos.search_event(filtro))  #busca los eventos por tipo y devuelve una lista con los objetos que tengan el atributo especificado
+                    if lista.get_db() == []:                              #esta lista se convierte en objeto Taquilla y se le aplica el método show_events para enseñar la información en pantalla
                         print("")
                         print("***  Error: la información que ha ingresado no se encuentra en la base de datos. Intente nuevamente  ***")
                         print("")                                                                           
                     else:
-                        lista.show_events()      #esta lista se convierte en objeto Taquilla y se le aplica el método show_events para enseñar la información en pantalla
+                        lista.show_events()     
                         
-
                 if op1 == 3:
                     break
 
 
-        if op == 2:
+        if op == 2:       #Venta de tickets
             pass
 
         if op == 6:
-            print("¡Adiós!")
+            print("¡Hasta pronto!")
             break
         
 
