@@ -65,12 +65,13 @@ class Taquilla():
             tickets = check_op(1, len(matriz_vip),"Ingrese el número de tickets que desea comprar:\n-->")
 
         print("")
-        print("Elija los sientos que desee:")   #FIXME ELEGIR PUESTOS
+        print("Elija los sientos que desee:")   
         print("")
 
         cont = 0    #esto es para asegurar que la persona escoja el número de asientos según la cantidad de tickets
-        lista_asiento = []
-
+        
+        lista_asiento = []          #NOTE CONFIGURAR LOS ASIENTOS OCUPADOS (comparar elementos de una lista con el asiento escogido por el usuario)
+                                    #FIXME lista_asiento siempre será vacía si se deja aquí adentro
         while tickets > cont:
 
             if tipo_asiento == 1:      
@@ -89,5 +90,20 @@ class Taquilla():
                 lista_asiento.append(matriz_vip[multi-1])
 
                 cont += 1
-        
-        print(lista_asiento)
+
+        ###### MOSTRAR COSTOS #######
+
+        for eve in range(len(lista_events.get_db())):
+                if lista_events.get_db()[eve].get_nombre_evento() == evento:
+                    precios = lista_events.get_db()[eve].get_precio()
+                                
+
+                    if tipo_asiento == 1:           #IF VAMPIRE == TRUE 
+                        iva = (precios[0]*tickets)*0.16        #Calcular el IVA para el precio general
+                        print(f"*Costo: ${(precios[0]*tickets)+iva}")
+
+                    elif tipo_asiento == 2:
+                        iva = (precios[1]*tickets)*0.16             #Calcular el IVA para el precio VIP
+                        print(f"*Costo: ${(precios[1]*tickets)+iva}")
+
+            
