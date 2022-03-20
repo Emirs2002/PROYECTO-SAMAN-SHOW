@@ -24,7 +24,7 @@ def check_num(msg):
     while True:
         print("")
         num = input(msg)        
-        if num.replace(" ", "").isnumeric():
+        if num.replace(" ", "").replace("-", "").isnumeric():
              break
         else:
             print("Error, enter number")
@@ -121,9 +121,11 @@ def matrix(filas, columnas, let):
         for columna in range(1, columnas+1):
             if columna == 1:
                 print(f"{let}{fila}-{columna}", end=" ")
+
             else:
                 print(f" {let}{fila}-{columna}", end=" ")
         print("")
-        
+
+### Determinar si un número dado es vampiro ######
 def check_vampire(num):
     pass
