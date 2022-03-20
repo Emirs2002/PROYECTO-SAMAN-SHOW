@@ -3,6 +3,7 @@ class Cliente():
         
         self.__cedula = cedula
 
+
     def get_cedula(self):
         return self.__cedula
 
