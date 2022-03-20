@@ -1,4 +1,4 @@
-from tools import *
+from tools import assign_event, read_db, check_op
 from Cartelera import Cartelera
 from Taquilla import Taquilla
 
@@ -8,8 +8,9 @@ def main():
     lista_eventos = []
     clients_db = []
 
-    lista_eventos = Cartelera(assign_event(lista_eventos))
-    
+    lista_eventos = Cartelera(assign_event(lista_eventos))  #se asigna la información del API a sus respectivos objetos y se añaden a una lista vacía
+                                                            #La lista con la info de los eventos se transforma en objeto Cartelera
+
     clients_db = Taquilla(read_db("Clientes_tickets.txt", clients_db))
     
     while True:
@@ -29,11 +30,14 @@ def main():
 
         if op == 1:   #MÓDULO 1: Opción "ver eventos" abre un submenú
             while True:   
-                op1 = check_op(1, 3, '''Ingrese la opción que desea realizar:      
+                op1 = check_op(1, 3, '''Ingrese la opción que desea realizar:     
                             \n1.-Ver todos los eventos
                             \n2.-Buscar eventos por filtro
                             \n3.-Volver al menú 
-                            \n-->''')
+                            \n-->''')                            
+                    
+                    #SUBMENÚ DE VER EVENTOS
+
                 if op1 == 1:
                     lista_eventos.show_events()          #Muestra todos los eventos con su respectiva información
                     
@@ -59,6 +63,9 @@ def main():
 
         if op == 2:       #MÓDULO 2: Venta de tickets
             clients_db.comprar_tickets(lista_eventos)
+
+        if op == 3:      #MÓDULO 3: Gestión de artículos de la feria
+            pass
 
         if op == 6:
             print("¡Hasta pronto!")
