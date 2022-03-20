@@ -25,31 +25,31 @@ def main():
             \n==>''') 
 
         if op == 1:   #MÓDULO 1: Opción "ver eventos" abre un submenú
-            while True:
-                op1 = check_op(1, 3, '''Ingrese la opción que desea realizar:
+            while True:   
+                op1 = check_op(1, 3, '''Ingrese la opción que desea realizar:      
                             \n1.-Ver todos los eventos
                             \n2.-Buscar eventos por filtro
                             \n3.-Volver al menú \n-->''')
                 if op1 == 1:
-                    lista_eventos.show_events()
+                    lista_eventos.show_events()          #Muestra todos los eventos con su respectiva información
                     
                 if op1 == 2:
-                    filtro = check_op(0, 4, '''Ingrese la opción que desea realizar:
+                    filtro = check_op(1, 4, '''Ingrese la opción que desea realizar:
                                     \n1.-Tipo
                                     \n2.-Fecha   
                                     \n3.-Actor o cantante
                                     \n4.-Nombre \n-->''')     #NOTE cómo es eso de buscar por fecha
-                    ''' if filtro == 1:
-                        search_event(filtro)
+                    if filtro == 1:
+                        lista_eventos.search_event(filtro)
 
                     if filtro == 2:
-                        search_event(filtro)
+                        lista_eventos.search_event(filtro)
 
                     if filtro == 3:
-                        search_event(filtro)
+                        lista_eventos.search_event(filtro)
 
                     if filtro == 4:
-                        search_event(filtro)'''
+                        lista_eventos.search_event(filtro)
 
                 if op1 == 3:
                     break
