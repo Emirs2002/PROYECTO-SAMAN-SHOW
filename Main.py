@@ -10,8 +10,6 @@ def main():
  
     while True:
 
-       
-
         print("")
         print("***BIENVENIDO A SAMAN SHOW***")
         print("")
@@ -39,19 +37,16 @@ def main():
                                     \n1.-Tipo
                                     \n2.-Fecha   
                                     \n3.-Actor o cantante
-                                    \n4.-Nombre \n-->''')     #NOTE cómo es eso de buscar por fecha
-                    if filtro == 1:                        
-                        lista = Taquilla(lista_eventos.search_event(filtro))  #busca los eventos por tipo y devuelve una lista con los objetos que tengan el atributo especificado
-                        lista.show_events()                                   # esta lista se convierte en objeto Taquilla y se le aplica el método show_events para enseñar la información en pantalla
-
-                    if filtro == 2:
-                        lista_eventos.search_event(filtro)
-
-                    if filtro == 3:
-                        lista_eventos.search_event(filtro)
-
-                    if filtro == 4:
-                        lista_eventos.search_event(filtro)
+                                    \n4.-Nombre \n-->''')     
+                                            
+                    lista = Taquilla(lista_eventos.search_event(filtro))  #busca los eventos por tipo y devuelve una lista con los objetos que tengan el atributo especificado
+                    if lista.get_db() == []:
+                        print("")
+                        print("***  Error: la información que ha ingresado no se encuentra en la base de datos. Intente nuevamente  ***")
+                        print("")                                                                           
+                    else:
+                        lista.show_events()      #esta lista se convierte en objeto Taquilla y se le aplica el método show_events para enseñar la información en pantalla
+                        
 
                 if op1 == 3:
                     break
