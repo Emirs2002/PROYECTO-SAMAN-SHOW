@@ -12,7 +12,7 @@ def check_let(msg):
     while True:
         print("")
         word = input(msg)
-        if word.replace(" ", "").isalpha():
+        if word.replace(" ", "").replace("&", "").isalpha():
              break
         else:
             print("Error, enter a valid data")
@@ -74,7 +74,7 @@ def load_db(txt, datos):
 
     escritura.close()   
 
-# JSON
+######### Adquirir la información del API #########
      
 def assign_event(lista_events):
     url = "https://raw.githubusercontent.com/Algoritmos-y-Programacion/api_saman_show/main/api.json"
@@ -96,21 +96,25 @@ def assign_event(lista_events):
 
 ###  Ordenar los objetos por un parámetro introducido ###
 
-def quicksort(db):
+def quick_sort(lista):    #FIXME PONERLO A TRABAJAR CON OBJETOS EN GENERAL
 
-    if len(db) <= 1:
-        return db
     
+    if len(lista) <=1:
+        return lista    
+   
+    objeto = lista[0]
+    pivote = objeto.get_average()
     menores = []
     mayores = []
-    pivote = db[0]
-    for num in range(1, len(db)):
-        if db[num] > pivote:
-            mayores.append(db[num])
+    for student in range(1, len(lista)):
+        num = lista[student].get_average()
+        if num > pivote:
+            mayores.append(lista[student])
         else:
-            menores.append(db[num])
+            menores.append(lista[student])
+    return quick_sort(mayores) + [objeto] + quick_sort(menores)
 
-    return quicksort(menores) + [pivote] + quicksort(mayores)
+
 
 ### Hacer matrices de filas y columnas especificadas por el usuario ### 
 
