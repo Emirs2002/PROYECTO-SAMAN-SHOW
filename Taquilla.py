@@ -1,5 +1,5 @@
 from Cartelera import Cartelera
-from Cliente import Cliente
+from ClienteEvent import ClienteEvent
 from tools import *
 from Evento import *
 class Taquilla():
@@ -8,6 +8,7 @@ class Taquilla():
 
     def get_clientes(self):
         return self.__clientes
+
 
     def comprar_tickets(self, lista_events):
         
@@ -22,8 +23,8 @@ class Taquilla():
        
         ### Enseñar los asientos del evento que ingrese el cliente ###  
         
-         #NOTE FUNCIONA GENIAL ESTE
-
+        matriz_general = []
+        matriz_vip = []
         inside_db = False
         while inside_db == False:
 
@@ -37,31 +38,56 @@ class Taquilla():
                         if tipo == "general":
                             print("")
                             print("*General:") 
-                            matrix(asiento[0], asiento[1], "G")   #Se llama a la función matrix para enseñar los puestos libres en general
+                            matrix(asiento[0], asiento[1], "G")   #Se llama a la función matrix para enseñar los puestos en general
+                            
+                            for x in range(1, (asiento[0]*asiento[1])+1):   #Guarda los asientos generales en una lista
+                                matriz_general.append(f"G{x}")
 
                         elif tipo == "vip":
                             print("")
                             print("*VIP:") 
                             matrix(asiento[0], asiento[1], "V")    #Se llama a la función matrix para enseñar los puestos libres en VIP
+                            
+                            for x in range(1, (asiento[0]*asiento[1])+1):    #Guarda los asientos vip en una lista
+                                 matriz_vip.append(f"V{x}")
+                           
 
             if inside_db == False: 
                 print("Error, el nombre que ha ingresado no se encuentra en la base de datos.Intente nuevamente.")
-        
-        tickets = check_num("Ingrese el número de tickets que desea comprar:\n-->")
+      
+        tipo_asiento = check_op(1, 2,'''Seleccione el tipo de asiento que desea:
+                            \n1.-General
+                            \n2.-VIP
+                            \n==>''')
+        if tipo_asiento == 1:    #Asegurar que el número de tickets deseados no exceda el número de asientos del evento
+            tickets = check_op(1, len(matriz_general),"Ingrese el número de tickets que desea comprar:\n-->")
+        else:
+            tickets = check_op(1, len(matriz_vip),"Ingrese el número de tickets que desea comprar:\n-->")
 
         print("")
         print("Elija los sientos que desee:")   #FIXME ELEGIR PUESTOS
         print("")
 
-    #    cont = 0    #esto es para asegurar que la persona escoja el número de asientos según la cantidad de tickets
-    #    asiento = []
-    #    while tickets > cont:
-    #        tipo_asiento = check_let('''Seleccione el tipo de asiento que desea:
-    #                        \n1.-General
-    #                        \n2.-VIP''')
-    #        
-    #        asiento = check_num('''Ingrese el número del asiento:
-    #                            \n==>''')
-    #        if 
-    #        cont += 1
-    #        pass
+        cont = 0    #esto es para asegurar que la persona escoja el número de asientos según la cantidad de tickets
+        lista_asiento = []
+
+        while tickets > cont:
+
+            if tipo_asiento == 1:      
+                asiento = check_num('''Ingrese el número del asiento (Ejemplo: G1-8. Ingresar '1-8'):
+                                \n==>''')
+                multi_num = asiento.split("-")                
+                multi = int(multi_num[0]) * int(multi_num[1])  
+                lista_asiento.append(matriz_general[multi-1])
+                cont += 1
+
+            elif tipo_asiento == 2:
+                asiento = check_num('''Ingrese el número del asiento (Ejemplo: V1-2. Ingresar '1-2'):
+                                \n==>''')
+                multi_num = asiento.split("-")                
+                multi = int(multi_num[0]) * int(multi_num[1])  
+                lista_asiento.append(matriz_vip[multi-1])
+
+                cont += 1
+        
+        print(lista_asiento)
