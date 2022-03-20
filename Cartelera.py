@@ -35,18 +35,18 @@ class Cartelera():
                 print(f"--> {lista_events[eve].get_cartel()[cart]}")
 
             print("")
-            print("-Asientos:")             
+            print("-Asientos:")               #Modificar esta parte. Que muestre mejor cantidad de asientos
             layout = lista_events[eve].get_asientos()
             for tipo, asiento in layout.items():
                 if tipo == "general":
                     print("")
                     print("*General:") 
-                    matrix(asiento[0], asiento[1], "G")    #Se llama a la función matrix para enseñar los puestos libres en general
+                    matrix(asiento[0], asiento[1], "G")  
 
                 elif tipo == "vip":
                     print("")
                     print("*VIP:") 
-                    matrix(asiento[0], asiento[1], "V")     #Se llama a la función matrix para enseñar los puestos libres en VIP
+                    matrix(asiento[0], asiento[1], "V")     
         
             print("")
             print("-Precios:")
@@ -80,7 +80,7 @@ class Cartelera():
             return lista_tipo
                     
 
-    #######   F E C H A   #######     #Únicamente busca por mes
+    #######   F E C H A   #######     #FIXME NO ES SOLAMENTE POR MES, TAMBIÉN TOMA EL DÍA
         if num == 2: 
             lista_fecha = []
             mes = check_num("Ingrese el mes del evento (Intoducir dos dígitos. Ejemplo: abril = '04'):\n==>")
