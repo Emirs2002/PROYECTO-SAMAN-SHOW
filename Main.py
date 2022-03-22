@@ -1,19 +1,25 @@
-from tools import assign_event, read_db, check_op
-from Cartelera import Cartelera
+from tools import assign_event, load_db, read_db, check_op, assign_producto
+
 from Taquilla import Taquilla
+from Feria import Feria 
 
 
 def main():
     
     lista_eventos = []
+    lista_articulos = []
     clients_db = []
+    lista_asientos_ocupados = []
 
-    lista_eventos = Cartelera(assign_event(lista_eventos))  #se asigna la información del API a sus respectivos objetos y se añaden a una lista vacía
+    lista_eventos = Taquilla(assign_event(lista_eventos))  #se asigna la información del API a sus respectivos objetos y se añaden a una lista vacía
                                                             #La lista con la info de los eventos se transforma en objeto Cartelera
+    lista_articulos = Feria(assign_producto(lista_articulos))
 
     clients_db = Taquilla(read_db("Clientes_tickets.txt", clients_db))
     
     while True:
+
+        lista_asientos_ocupados = read_db("asientos_ocupados.txt", lista_asientos_ocupados)
 
         print("")
         print("***BIENVENIDO A SAMAN SHOW***")
@@ -22,8 +28,8 @@ def main():
         op = check_op(1, 6, '''Ingrese la opción que desea realizar:
             \n1.- Ver eventos
             \n2.- Comprar Tickets
-            \n3.- Ver artículos de la feria
-            \n4.- Venta de la Feria
+            \n3.- Gestión Feria
+            \n4.- Venta Feria
             \n5.- Estadísticas
             \n6.- Salir
             \n==>''') 
@@ -49,7 +55,7 @@ def main():
                                     \n4.-Nombre 
                                     \n-->''')     
                                             
-                    lista = Cartelera(lista_eventos.search_event(filtro))  #busca los eventos por tipo y devuelve una lista con los objetos que tengan el atributo especificado
+                    lista = Taquilla(lista_eventos.search_event(filtro))  #busca los eventos por tipo y devuelve una lista con los objetos que tengan el atributo especificado
                     if lista.get_db() == []:                              #esta lista se convierte en objeto Taquilla y se le aplica el método show_events para enseñar la información en pantalla
                         print("")
                         print("***  Error: la información que ha ingresado no se encuentra en la base de datos. Intente nuevamente  ***")
@@ -62,10 +68,39 @@ def main():
 
 
         if op == 2:       #MÓDULO 2: Venta de tickets
-            clients_db.comprar_tickets(lista_eventos)
+            client_event = clients_db.comprar_tickets(lista_eventos,lista_asientos_ocupados)
+            
+            if client_event == -1:    #Cliente declina el pago
+                continue
+            else:                     #Cliente acepta realizar el pago
+                print("Su compra ha sido completada exitosamente.")
+
+                load_db("Clientes_tickets.txt", client_event)
+
 
         if op == 3:      #MÓDULO 3: Gestión de artículos de la feria
-            pass
+            while True:   
+                op3 = check_op(1, 4, '''Ingrese la opción que desea realizar:     
+                            \n1.-Ver todos los productos
+                            \n2.-Buscar productos por filtro
+                            \n3.-Eliminar producto                             
+                            \n4.-Volver al menú
+                            \n-->''')          #ANCHOR CONFIGURAR TODO ESTE SUBMENÚ
+                if op3 == 1:
+                    pass
+                
+                if op3 == 2:                    
+                    filtro = check_op(1, 4, '''Ingrese la opción que desea realizar:
+                                    \n1.-Tipo
+                                    \n2.-Nombre   
+                                    \n3.-Precio
+                                    \n-->''')
+                if op3 == 3:
+                    pass
+
+                if op3 == 4:
+                    break 
+
 
         if op == 6:
             print("¡Hasta pronto!")
