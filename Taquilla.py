@@ -9,6 +9,8 @@ class Taquilla():
     def get_db(self):
         return self.__db
 
+        ########### MÓDULO 1 ###########
+
     def show_events(self):         #Enseña todos los eventos en la base de datos  
         
         lista_events = self.__db
@@ -41,7 +43,7 @@ class Taquilla():
                 if tipo == "general":
                     print("")
                     print("*General:") 
-                    print(matrix(asiento[0], asiento[1], "G"))  
+                    matrix(asiento[0], asiento[1], "G")
 
                 elif tipo == "vip":
                     print("")
@@ -124,7 +126,7 @@ class Taquilla():
             
             return lista_nombre
 
-            ########   MÓDULO 2 - COMPRA DE TICKETS ###########
+        ###########   MÓDULO 2 - COMPRA DE TICKETS ###########
 
     def comprar_tickets(self, lista_events, lista_asiento):
         
@@ -167,7 +169,7 @@ class Taquilla():
                             for x in range(1, (asiento[0]*asiento[1])+1):    #Guarda los asientos vip en una lista
                                  matriz_vip.append(f"V{x}")
                            
-
+            
             if inside_db == False: 
                 print("Error, el nombre que ha ingresado no se encuentra en la base de datos.Intente nuevamente.")
       
@@ -192,25 +194,42 @@ class Taquilla():
         while tickets > cont:
 
             if tipo_asiento == 1:      
-                asiento = check_num('''Ingrese el número del asiento (Ejemplo: G1-8. Ingresar '1-8'):
-                                \n==>''')
-                multi_num = asiento.split("-")                
-                multi = int(multi_num[0]) * int(multi_num[1]) 
-                asientos.append(matriz_general[multi-1])    #atributo cliente
-                lista_asiento.append(matriz_general[multi-1])  #lista general de asientos ocupados
-                cont += 1
+                asiento = check_num('''Ingrese el número del asiento (Ejemplo: G10. Ingresar '10'):
+                                \n==>''')  
+                asiento = int(asiento) 
+                if len(lista_asiento) == 0:
+                    asientos.append(matriz_general[asiento-1])    
+                    lista_asiento.append(matriz_general[asiento-1])  
+                    cont += 1 
+                else:
+                    for spot in range(len(lista_asiento)):
+                        if lista_asiento[spot] == matriz_general[asiento-1]:
+                            print("El asiento seleccionado ya se encuentra ocupado")                
 
-            elif tipo_asiento == 2:
+                        else:
+                            asientos.append(matriz_general[asiento-1])    
+                            lista_asiento.append(matriz_general[asiento-1])  
+                            cont += 1
+
+            elif tipo_asiento == 2:   
                 asiento = check_num('''Ingrese el número del asiento (Ejemplo: V1-2. Ingresar '1-2'):
                                 \n==>''')
-                multi_num = asiento.split("-")                
-                multi = int(multi_num[0]) * int(multi_num[1])
-                asientos.append(matriz_vip[multi-1])  
-                lista_asiento.append(matriz_vip[multi-1])
+                asiento = int(asiento) 
+                if len(lista_asiento) == 0:
+                    asientos.append(matriz_vip[asiento-1])    
+                    lista_asiento.append(matriz_vip[asiento-1])  
+                    cont += 1 
+                else:
+                    for spot in range(len(lista_asiento)):
+                        if lista_asiento[spot] == matriz_vip[asiento-1]:
+                            print("El asiento seleccionado ya se encuentra ocupado")                
 
-                cont += 1
+                        else:
+                            asientos.append(matriz_vip[asiento-1])    
+                            lista_asiento.append(matriz_vip[asiento-1])  
+                            cont += 1
 
-        load_db("asientos_ocupados.txt", lista_asiento)
+        
 
         ###### MOSTRAR COSTOS #######
 
@@ -222,9 +241,12 @@ class Taquilla():
                     if tipo_asiento == 1:           #IF VAMPIRE == TRUE 
                         iva = (precios[0]*tickets)*0.16        #Calcular el IVA para el precio general
                         print(f"*Costo: ${(precios[0]*tickets)+iva}")
-
+        
                     elif tipo_asiento == 2:
                         iva = (precios[1]*tickets)*0.16             #Calcular el IVA para el precio VIP
                         print(f"*Costo: ${(precios[1]*tickets)+iva}")
-        
-            
+
+       
+        client = ClienteEvent(cedula = cedula, nombre = name, edad = age, entradas = tickets, evento = evento, asientos = asientos)
+
+        #load_db("asientos_ocupados.txt", lista_asiento)    #carga asientos seleccionados a la lista grande
