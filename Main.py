@@ -13,6 +13,7 @@ def main():
 
     lista_eventos = Taquilla(assign_event(lista_eventos))  #se asigna la información del API a sus respectivos objetos y se añaden a una lista vacía
                                                             #La lista con la info de los eventos se transforma en objeto Cartelera
+    
     lista_articulos = Feria(assign_producto(lista_articulos))
 
     clients_db = Taquilla(read_db("Clientes_tickets.txt", clients_db))

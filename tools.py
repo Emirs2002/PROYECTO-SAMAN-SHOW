@@ -96,25 +96,39 @@ def assign_event(lista_events):
         
         return lista_events
 
-###  Ordenar los objetos por un parámetro introducido ###
+###  Ordenar eventos por nombre ###
 
-def quick_sort(lista):    #FIXME PONERLO A TRABAJAR CON OBJETOS EN GENERAL
+def quick_sort(lista):    
 
-    
     if len(lista) <=1:
         return lista    
-   
+
     objeto = lista[0]
-    pivote = objeto.get_average()
+    pivote = objeto.get_nombre_evento()
     menores = []
     mayores = []
-    for student in range(1, len(lista)):
-        num = lista[student].get_average()
-        if num > pivote:
-            mayores.append(lista[student])
+    for event in range(1, len(lista)):
+        evento = lista[event].get_nombre_evento()
+        if evento > pivote:
+            mayores.append(lista[event])
         else:
-            menores.append(lista[student])
-    return quick_sort(mayores) + [objeto] + quick_sort(menores)
+            menores.append(lista[event])
+    return quick_sort(menores) + [objeto] + quick_sort(mayores)
+
+
+#Búsqueda Binaria
+
+def binary_search(lista, key):
+    if len(lista) == 0:
+        return None
+    mid = len(lista)//2
+    if lista[mid].get_average() is not None:
+        return lista[mid]
+    elif key < lista[mid].get_average():
+        return binary_search(lista[0:mid], key)
+    else:
+        return binary_search(lista[mid+1:], key)
+   
 
 ### Hacer matrices de filas y columnas especificadas por el usuario ### 
 
@@ -135,7 +149,7 @@ def matrix(filas, columnas, let):
 def check_vampire(num):                          
     
     first_mid = []          #AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA T-T  
-    second_mid = []
+    second_mid = []                         #FIXME VAMPIROS
     if len(num) % 2 == 0:   
         pass                        #Tienen una cantidad par de dígitos.
        
