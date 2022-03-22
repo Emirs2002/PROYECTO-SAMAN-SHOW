@@ -116,14 +116,17 @@ def quick_sort(lista):    #FIXME PONERLO A TRABAJAR CON OBJETOS EN GENERAL
 
 ### Hacer matrices de filas y columnas especificadas por el usuario ### 
 
-def matrix(filas, columnas, let):
+def matrix(filas, columnas, let):    
+
+    cont = 1
     for fila in range(1, filas+1):
         for columna in range(1, columnas+1):
             if columna == 1:
-                print(f"{let}{fila}-{columna}", end=" ")
-
+                print(f"{let}{cont}", end=" ")
+                cont +=1
             else:
-                print(f" {let}{fila}-{columna}", end=" ")
+                print(f" {let}{cont}", end=" ")
+                cont +=1
         print("")
 
 ### Determinar si un número dado es vampiro ######
