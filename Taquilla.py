@@ -1,7 +1,9 @@
 
 from ClienteEvent import ClienteEvent
 from tools import *
-from Evento import *
+from Evento import Evento
+from Musical import Musical
+from Teatro import Teatro
 class Taquilla():
     def __init__(self, db):        
         self.__db = db
@@ -14,6 +16,8 @@ class Taquilla():
     def show_events(self):         #Enseña todos los eventos en la base de datos  
         
         lista_events = self.__db
+
+        lista_events = quick_sort(lista_events)
 
         print("")
         print("    ------------------EVENTOS-------------------     ")
@@ -188,10 +192,10 @@ class Taquilla():
 
         cont = 0    #esto es para asegurar que la persona escoja el número de asientos según la cantidad de tickets
         
-                  #NOTE CONFIGURAR LOS ASIENTOS OCUPADOS (comparar elementos de una lista con el asiento escogido por el usuario)
-        asientos= []                        #FIXME arreglar código con lista cargada
+                            ######SELECCIÓN DE ASIENTOS#####  #FIXME SOLO FUNCIONA PARA UN EVENTO
+        asientos= []                        
        
-        while tickets > cont:
+        while tickets > cont:      
 
             if tipo_asiento == 1:      
                 asiento = check_num('''Ingrese el número del asiento (Ejemplo: G10. Ingresar '10'):
@@ -230,8 +234,7 @@ class Taquilla():
                             cont += 1
 
         
-
-        ###### MOSTRAR COSTOS #######
+        ###### MOSTRAR COSTOS #######      
 
         for eve in range(len(lista_events.get_db())):
                 if lista_events.get_db()[eve].get_nombre_evento() == evento:
@@ -240,13 +243,35 @@ class Taquilla():
 
                     if tipo_asiento == 1:           #IF VAMPIRE == TRUE 
                         iva = (precios[0]*tickets)*0.16        #Calcular el IVA para el precio general
-                        print(f"*Costo: ${(precios[0]*tickets)+iva}")
+                        costo = (precios[0]*tickets)+iva
+                        
+                        print(f"Asientos seleccionados: {asientos}")
+                        print(f"*Costo total: ${costo}")
         
                     elif tipo_asiento == 2:
                         iva = (precios[1]*tickets)*0.16             #Calcular el IVA para el precio VIP
-                        print(f"*Costo: ${(precios[1]*tickets)+iva}")
-
+                        costo = (precios[1]*tickets)+iva
+                        
+                        print(f"Asientos seleccionados: {asientos}")
+                        print(f"*Costo total: ${costo}")
+                        
+            #NOTE FALTA ENSEÑAR OTRA INFORMACIÓN
        
         client = ClienteEvent(cedula = cedula, nombre = name, edad = age, entradas = tickets, evento = evento, asientos = asientos)
 
-        #load_db("asientos_ocupados.txt", lista_asiento)    #carga asientos seleccionados a la lista grande
+        #### Preguntar al usuario si desea pagar ####
+
+        op = check_op(1,2,"¿Desea proceder con el pago? \n==>")
+
+        if op == 1:
+
+            #load_db("asientos_ocupados.txt", lista_asiento)  #carga asientos seleccionados a la lista grande
+            
+            return client    #Si la respuesta es "sí" se devuelve el objeto con la información
+            
+
+        if op == 2:
+             
+            return -1       #Si la respuesta es "no" se devuelve -1 
+
+           
