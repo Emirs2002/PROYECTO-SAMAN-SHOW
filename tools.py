@@ -3,8 +3,10 @@ import pickle
 import os
 import requests   
 import json
+from Alimento import Alimento
 from Musical import Musical
 from Teatro import Teatro
+from Bebida import Bebida
 
 
 #validar palabras
@@ -74,7 +76,7 @@ def load_db(txt, datos):
 
     escritura.close()   
 
-######### Adquirir la información del API #########
+######### Adquirir la información del API para los eventos #########
      
 def assign_event(lista_events):
     url = "https://raw.githubusercontent.com/Algoritmos-y-Programacion/api_saman_show/main/api.json"
@@ -130,5 +132,32 @@ def matrix(filas, columnas, let):
         print("")
 
 ### Determinar si un número dado es vampiro ######
-def check_vampire(num):
-    pass
+def check_vampire(num):                          
+    
+    first_mid = []          #AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA T-T  
+    second_mid = []
+    if len(num) % 2 == 0:   
+        pass                        #Tienen una cantidad par de dígitos.
+       
+    else:
+        return False                       
+
+######## Adquirir la información del API para los productos #######
+
+def assign_producto(lista_products):
+    
+    url = "https://raw.githubusercontent.com/Algoritmos-y-Programacion/api_saman_show/main/api.json"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        db = response.json() 
+
+        for art in range(len(db["food_fair_inventory"])):
+            if db["food_fair_inventory"][art]["type"] == 1:
+                alimento = Alimento(nombre_producto=db["food_fair_inventory"][art]["name"], clasificacion=db["food_fair_inventory"][art]["type"], precio=db["food_fair_inventory"][art]["price"], presentacion=db["food_fair_inventory"][art]["presentation"], cantidad = db["food_fair_inventory"][art]["amount"])
+                lista_products.append(alimento)
+            elif db["food_fair_inventory"][art]["type"] == 2:
+                bebida = Bebida(nombre_producto=db["food_fair_inventory"][art]["name"], clasificacion=db["food_fair_inventory"][art]["type"], precio=db["food_fair_inventory"][art]["price"], cantidad = db["food_fair_inventory"][art]["amount"])
+                lista_products.append(bebida)
+        
+        return lista_products
