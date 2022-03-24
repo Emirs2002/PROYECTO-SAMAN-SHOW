@@ -16,7 +16,7 @@ def main():
     
     lista_articulos = Feria(assign_producto(lista_articulos))
 
-    clients_db = Taquilla(read_db("Clientes_tickets.txt", clients_db))
+    
     
     while True:
 
@@ -49,17 +49,16 @@ def main():
                     lista_eventos.show_events()          #Muestra todos los eventos con su respectiva información
                     
                 if op1 == 2:
-                    filtro = check_op(1, 4, '''Ingrese la opción que desea realizar:
+                    filtro = check_op(1, 5, '''Ingrese la opción que desea realizar:
                                     \n1.-Tipo
                                     \n2.-Fecha   
                                     \n3.-Actor o cantante
-                                    \n4.-Nombre 
-                                    \n-->''')     
+                                    \n4.-Nombre \n-->''')     
                                             
                     lista = Taquilla(lista_eventos.search_event(filtro))  #busca los eventos por tipo y devuelve una lista con los objetos que tengan el atributo especificado
                     if lista.get_db() == []:                              #esta lista se convierte en objeto Taquilla y se le aplica el método show_events para enseñar la información en pantalla
                         print("")
-                        print("***  Error: la información que ha ingresado no se encuentra en la base de datos. Intente nuevamente  ***")
+                        print("***  Error: la información que ha ingresado no se encuentra en la base de datos, intente nuevamente  ***")
                         print("")                                                                           
                     else:
                         lista.show_events()     
@@ -69,6 +68,7 @@ def main():
 
 
         if op == 2:       #MÓDULO 2: Venta de tickets
+            clients_db = Taquilla(read_db("Clientes_tickets.txt", clients_db))
             client_event = clients_db.comprar_tickets(lista_eventos,lista_asientos_ocupados)
             
             
@@ -77,7 +77,8 @@ def main():
             else:                     #Cliente acepta realizar el pago
                 print("Su compra ha sido completada exitosamente.")
 
-                load_db("Clientes_tickets.txt", client_event)
+                clients_db.get_db().append(client_event)
+                load_db("Clientes_tickets.txt", clients_db)
 
 
         if op == 3:      #MÓDULO 3: Gestión de artículos de la feria
@@ -92,19 +93,49 @@ def main():
                     lista_articulos.show_products()
                 
                 if op3 == 2:                    
-                    filtro = check_op(1, 4, '''Ingrese la opción que desea realizar:
-                                    \n1.-Tipo
-                                    \n2.-Nombre   
+                    filtro = check_op(1, 3, '''Ingrese por cuál filtro desea buscar:
+                                    \n1.-Nombre
+                                    \n2.-Tipo   
                                     \n3.-Precio
                                     \n-->''')
+
+                    lista = Feria(lista_articulos.search_product(filtro))
+
+                    if lista.get_food_db() == []:
+                        print("")
+                        print("***  Error: la información que ha ingresado no se encuentra en la base de datos, intente nuevamente  ***")
+                        print("")  
+                    else: 
+                        lista.show_products()
+
+
                 if op3 == 3:
-                    pass
+                    lista_articulos.show_products()
+                    lista_articulos = Feria(lista_articulos.delete_product())
 
-                if op3 == 4:
-                    break 
+                if op3 == 4:                  
+                    break
 
 
-        if op == 6:
+        if op == 4:      # MÓDULO 4: Compra de comida
+
+            clients_db = Feria(read_db("Clientes_tickets.txt", clients_db))
+            id_confirmation = clients_db.check_cedula()
+
+            if id_confirmation == -1:
+                print("")
+                print("Para comprar en la feria necesita haber comprado en la taquilla.")
+                print("")
+
+            else:
+                lista_articulos.comprar_comida()
+
+
+        if op == 5:  # MÓDULO 5: Estadísticas
+            pass
+
+
+        if op == 6:   #Salir de la aplicación 
             print("¡Hasta pronto!")
             break
         
