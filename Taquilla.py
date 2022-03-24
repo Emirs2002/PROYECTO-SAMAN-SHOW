@@ -4,6 +4,7 @@ from tools import *
 from Evento import Evento
 from Musical import Musical
 from Teatro import Teatro
+from Cliente import Cliente
 class Taquilla():
     def __init__(self, db):        
         self.__db = db
@@ -140,9 +141,8 @@ class Taquilla():
         
         age = check_num("Ingrese su edad:\n-->")        
 
-        lista_events.show_events()        
+        lista_events.show_events()      
 
-       
         ### Enseñar los asientos del evento que ingrese el cliente ###  
         
         matriz_general = []
@@ -176,6 +176,7 @@ class Taquilla():
             
             if inside_db == False: 
                 print("Error, el nombre que ha ingresado no se encuentra en la base de datos.Intente nuevamente.")
+                continue
       
         tipo_asiento = check_op(1, 2,'''Seleccione el tipo de asiento que desea:
                             \n1.-General
@@ -185,6 +186,7 @@ class Taquilla():
             tickets = check_op(1, len(matriz_general),"Ingrese el número de tickets que desea comprar:\n-->")
         else:
             tickets = check_op(1, len(matriz_vip),"Ingrese el número de tickets que desea comprar:\n-->")
+        tickets = int(tickets)
 
         print("")
         print("Elija los sientos que desee:")   
@@ -193,8 +195,9 @@ class Taquilla():
         cont = 0    #esto es para asegurar que la persona escoja el número de asientos según la cantidad de tickets
         
                             ######SELECCIÓN DE ASIENTOS#####  #FIXME SOLO FUNCIONA PARA UN EVENTO
-        asientos= []                        
-       
+        
+        asientos= []       #Lista de asientos del cliente                  
+        
         while tickets > cont:      
 
             if tipo_asiento == 1:      
@@ -203,7 +206,7 @@ class Taquilla():
                 asiento = int(asiento) 
                 if len(lista_asiento) == 0:
                     asientos.append(matriz_general[asiento-1])    
-                    lista_asiento.append(matriz_general[asiento-1])  
+                    lista_asiento.append(matriz_general[asiento-1])   #Lista de asientos ocupados en general
                     cont += 1 
                 else:
                     for spot in range(len(lista_asiento)):
@@ -214,6 +217,7 @@ class Taquilla():
                             asientos.append(matriz_general[asiento-1])    
                             lista_asiento.append(matriz_general[asiento-1])  
                             cont += 1
+                            break
 
             elif tipo_asiento == 2:   
                 asiento = check_num('''Ingrese el número del asiento (Ejemplo: V1-2. Ingresar '1-2'):
@@ -232,9 +236,13 @@ class Taquilla():
                             asientos.append(matriz_vip[asiento-1])    
                             lista_asiento.append(matriz_vip[asiento-1])  
                             cont += 1
+                            break
 
+        client = ClienteEvent(cedula = cedula, nombre = name, edad = age, entradas = tickets, evento = evento, asientos = asientos)
+
+
+        ###### CALCULAR COSTOS ######
         
-        ###### MOSTRAR COSTOS #######      
 
         for eve in range(len(lista_events.get_db())):
                 if lista_events.get_db()[eve].get_nombre_evento() == evento:
@@ -243,25 +251,36 @@ class Taquilla():
 
                     if tipo_asiento == 1:           #IF VAMPIRE == TRUE 
                         iva = (precios[0]*tickets)*0.16        #Calcular el IVA para el precio general
+                        subtotal = precios[0]*tickets
                         costo = (precios[0]*tickets)+iva
                         
-                        print(f"Asientos seleccionados: {asientos}")
-                        print(f"*Costo total: ${costo}")
-        
                     elif tipo_asiento == 2:
                         iva = (precios[1]*tickets)*0.16             #Calcular el IVA para el precio VIP
+                        subtotal = precios[1]*tickets
                         costo = (precios[1]*tickets)+iva
                         
-                        print(f"Asientos seleccionados: {asientos}")
-                        print(f"*Costo total: ${costo}")
-                        
-            #NOTE FALTA ENSEÑAR OTRA INFORMACIÓN
+    
+            ###### MOSTRAR FACTURA #######        #NOTE agregar descuento luego
        
-        client = ClienteEvent(cedula = cedula, nombre = name, edad = age, entradas = tickets, evento = evento, asientos = asientos)
+        print("********* FACTURA ***********")
 
+        print("*Datos de compra:")
+        client.show_client_data()
+        print("-------")
+        for event in range(client.get_entradas()):
+            print(f"->1 Entrada {client.get_evento()}      ${subtotal/client.get_entradas()}" )
+        print("")
+        print(f"*Subtotal: ${subtotal}")
+        #print("-------")
+        #print(f"*Descuento: -{descuento}")
+        print("-------")
+        print(f"*IVA: +{iva}")
+        print("-------")
+        print(f"*Monto total: ${costo}")
+                        
         #### Preguntar al usuario si desea pagar ####
 
-        op = check_op(1,2,"¿Desea proceder con el pago? \n==>")
+        op = check_op(1,2,"¿Desea proceder con el pago? \n1.-Sí \n2.-No \n==>")
 
         if op == 1:
 
@@ -271,7 +290,7 @@ class Taquilla():
             
 
         if op == 2:
-             
+            
             return -1       #Si la respuesta es "no" se devuelve -1 
 
            
