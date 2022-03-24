@@ -168,10 +168,18 @@ def assign_producto(lista_products):
 
         for art in range(len(db["food_fair_inventory"])):
             if db["food_fair_inventory"][art]["type"] == 1:
-                alimento = Alimento(nombre_producto=db["food_fair_inventory"][art]["name"], clasificacion=db["food_fair_inventory"][art]["type"], precio=db["food_fair_inventory"][art]["price"], presentacion=db["food_fair_inventory"][art]["presentation"], cantidad = db["food_fair_inventory"][art]["amount"])
+                iva = (db["food_fair_inventory"][art]["price"])*0.16
+                alimento = Alimento(nombre_producto=db["food_fair_inventory"][art]["name"], clasificacion=db["food_fair_inventory"][art]["type"], precio=(db["food_fair_inventory"][art]["price"]+iva), presentacion=db["food_fair_inventory"][art]["presentation"], cantidad = db["food_fair_inventory"][art]["amount"])
                 lista_products.append(alimento)
             elif db["food_fair_inventory"][art]["type"] == 2:
-                bebida = Bebida(nombre_producto=db["food_fair_inventory"][art]["name"], clasificacion=db["food_fair_inventory"][art]["type"], precio=db["food_fair_inventory"][art]["price"], cantidad = db["food_fair_inventory"][art]["amount"])
+                iva_1 = (db["food_fair_inventory"][art]["price"][0])*0.16
+                iva_2 = (db["food_fair_inventory"][art]["price"][1])*0.16
+                iva_3 = (db["food_fair_inventory"][art]["price"][2])*0.16
+                precio_1 = (db["food_fair_inventory"][art]["price"][0])+iva_1
+                precio_2 = (db["food_fair_inventory"][art]["price"][1])+iva_2
+                precio_3 = (db["food_fair_inventory"][art]["price"][2])+iva_3
+                price = [precio_1,precio_2,precio_3]
+                bebida = Bebida(nombre_producto=db["food_fair_inventory"][art]["name"], clasificacion=db["food_fair_inventory"][art]["type"], precio=price, cantidad = db["food_fair_inventory"][art]["amount"])
                 lista_products.append(bebida)
         
         return lista_products

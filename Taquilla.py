@@ -1,5 +1,5 @@
 
-from ClienteEvent import ClienteEvent
+from Cliente import Cliente
 from tools import *
 from Evento import Evento
 from Musical import Musical
@@ -21,7 +21,7 @@ class Taquilla():
         lista_events = quick_sort(lista_events)
 
         print("")
-        print("    ------------------EVENTOS-------------------     ")
+        print("    ------------------EVENTOS-------------------     ")   #FIXME AÑADIR A CADA SUBCLASE EL ATRIBUTO SHOW
         print("")
         for eve in range(len(lista_events)):
             
@@ -238,7 +238,7 @@ class Taquilla():
                             cont += 1
                             break
 
-        client = ClienteEvent(cedula = cedula, nombre = name, edad = age, entradas = tickets, evento = evento, asientos = asientos)
+        client = Cliente(cedula = cedula, nombre = name, edad = age, entradas = tickets, evento = evento, asientos = asientos)
 
 
         ###### CALCULAR COSTOS ######
