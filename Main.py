@@ -20,7 +20,7 @@ def main():
     
     while True:
 
-        lista_asientos_ocupados = read_db("asientos_ocupados.txt", lista_asientos_ocupados)
+        #lista_asientos_ocupados = read_db("asientos_ocupados.txt", lista_asientos_ocupados)
 
         print("")
         print("***BIENVENIDO A SAMAN SHOW***")
@@ -71,6 +71,7 @@ def main():
         if op == 2:       #MÓDULO 2: Venta de tickets
             client_event = clients_db.comprar_tickets(lista_eventos,lista_asientos_ocupados)
             
+            
             if client_event == -1:    #Cliente declina el pago
                 continue
             else:                     #Cliente acepta realizar el pago
@@ -88,7 +89,7 @@ def main():
                             \n4.-Volver al menú
                             \n-->''')          #ANCHOR CONFIGURAR TODO ESTE SUBMENÚ
                 if op3 == 1:
-                    pass
+                    lista_articulos.show_products()
                 
                 if op3 == 2:                    
                     filtro = check_op(1, 4, '''Ingrese la opción que desea realizar:
