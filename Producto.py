@@ -16,3 +16,12 @@ class Producto():
 
     def get_cantidad(self):
         return self.__cantidad
+    
+    def set_cantidad(self, new_cantidad):
+        self.__cantidad = new_cantidad
+
+    def delete_inventory(self, num):
+
+        cantidad = int(self.get_cantidad()) - num
+
+        return cantidad
