@@ -35,5 +35,8 @@ class Evento():
     def set_disponibilidad(self, new_disponibilidad):
         self.__disponibilidad = new_disponibilidad
 
+    
+
+
 
    

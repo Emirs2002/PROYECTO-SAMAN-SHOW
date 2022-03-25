@@ -67,7 +67,8 @@ class Taquilla():
             elif lista_events[eve].get_disponibilidad() == False:
                 print(f"-Nombre: {lista_events[eve].get_nombre_evento()}")
                 print("")
-                print("***** El evento se encuentra cerrado *****")
+                print("***** El evento se encuentra cerrado *****") 
+                    
     
     ##### ABRIR O CERRAR EVENTOS ######
     

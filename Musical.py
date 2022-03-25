@@ -9,3 +9,5 @@ class Musical(Evento):
 
     def get_num_bandas(self):
         return self.__num_bandas
+
+   
