@@ -1,4 +1,4 @@
-from tools import assign_event, load_db, read_db, check_op, assign_producto
+from tools import *
 
 from Taquilla import Taquilla
 from Feria import Feria 
@@ -27,7 +27,7 @@ def main():
         print("")
                               #Menú principal
         op = check_op(1, 6, '''Ingrese la opción que desea realizar:
-            \n1.- Ver eventos
+            \n1.- Gestión eventos
             \n2.- Comprar Tickets
             \n3.- Gestión Feria
             \n4.- Venta Feria
@@ -37,10 +37,11 @@ def main():
 
         if op == 1:   #MÓDULO 1: Opción "ver eventos" abre un submenú
             while True:   
-                op1 = check_op(1, 3, '''Ingrese la opción que desea realizar:     
+                op1 = check_op(1, 4, '''Ingrese la opción que desea realizar:     
                             \n1.-Ver todos los eventos
                             \n2.-Buscar eventos por filtro
-                            \n3.-Volver al menú 
+                            \n3.-Apertura o cierre de evento
+                            \n4.-Volver al menú 
                             \n-->''')                            
                     
                     #SUBMENÚ DE VER EVENTOS
@@ -62,8 +63,12 @@ def main():
                         print("")                                                                           
                     else:
                         lista.show_events()     
-                        
-                if op1 == 3:
+
+                if op1 == 3:     #abrir o cerrar venta de tickets
+                    lista_eventos.show_events()  
+                    lista_eventos.change_availability()
+
+                if op1 == 4:
                     break
 
 
@@ -128,7 +133,9 @@ def main():
                 print("")
 
             else:
-                lista_articulos.comprar_comida()
+                clients_list = clients_db.get_food_db().get_db()
+                lista_articulos.show_products()
+                lista_articulos.comprar_comida(id_confirmation, clients_list)
 
 
         if op == 5:  # MÓDULO 5: Estadísticas
