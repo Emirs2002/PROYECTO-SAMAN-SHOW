@@ -93,7 +93,7 @@ def main():
                             \n2.-Buscar productos por filtro
                             \n3.-Eliminar producto                             
                             \n4.-Volver al menú
-                            \n-->''')          #ANCHOR CONFIGURAR TODO ESTE SUBMENÚ
+                            \n-->''')          
                 if op3 == 1:
                     lista_articulos.show_products()
                 
@@ -135,7 +135,13 @@ def main():
             else:
                 clients_list = clients_db.get_food_db().get_db()
                 lista_articulos.show_products()
-                lista_articulos.comprar_comida(id_confirmation, clients_list)
+                lista_articulos = lista_articulos.comprar_comida(id_confirmation, clients_list)
+
+                if type(lista_articulos) == list:
+                    lista_articulos = Feria(lista_articulos)
+                else:
+                    lista_articulos = []
+                    lista_articulos = Feria(assign_producto(lista_articulos))
 
 
         if op == 5:  # MÓDULO 5: Estadísticas
