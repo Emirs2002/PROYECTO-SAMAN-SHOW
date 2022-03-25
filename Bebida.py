@@ -6,8 +6,11 @@ class Bebida(Producto):
 
     def show_bebida(self):
         print(f'''-Nombre: {self.get_nombre_producto()}
-                \n-Tipo: Bebida
-                \n-Cantidad {self.get_cantidad()}''')
+                \n-Tipo: Bebida''')
+        print("-Cantidad:") 
+        print(f"*Pequeño: {int(self.get_cantidad())//3}")
+        print(f"*Mediano: {int(self.get_cantidad())//3}")
+        print(f"*Grande: {int(self.get_cantidad())//3}")
         print("")
         print("-Precios:")                
         print(f"*Pequeño: ${self.get_precio()[0]}")
