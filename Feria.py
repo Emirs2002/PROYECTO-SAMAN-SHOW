@@ -1,7 +1,7 @@
 from tools import *
 from Bebida import Bebida
 from Alimento import Alimento
-
+from Taquilla import Taquilla
 class Feria():
     def __init__(self, food_db):
         self.__food_db = food_db
@@ -86,33 +86,15 @@ class Feria():
 
         #### P R E C I O S ####
 
-        if num == 3:        #ANCHOR PREGUNTAR POR ESTO 
+        if num == 3:        #ANCHOR HACERLO
             pass
         
 
 
         #######    MÓDULO 4   #######
 
-    #### ELIMINAR UNA CANTIDAD DETERMINADA DE PRODUCTOS DEL INVENTARIO #####
-
-    def delete_product_inventory(self, num_inventario):
-        
-        lista_productos = self.__food_db
-
-        num_inventario = check_num("¿Cuántos desea eliminar? \n-->")
-
-        producto_eliminar = int(producto_eliminar)
-        num_inventario = int(num_inventario)
-
-        cantidad = lista_productos[producto_eliminar-1].delete_inventory(num_inventario)
-
-        lista_productos[producto_eliminar-1].set_cantidad(cantidad)
-
-        return lista_productos
-
 
     ### VERIFICAR QUE EL CLIENTE HAYA COMPRADO UN TICKET ### 
-
 
     def check_cedula(self):
         clientes_list = self.__food_db
@@ -133,7 +115,7 @@ class Feria():
             return cedula
 
 
-    #### COMPRAR UN PRODUCTO ####
+    #### COMPRAR PRODUCTOS ####
 
 
     def comprar_comida(self, cedula, client_db):    #NOTE COMENTAR TODO
@@ -148,24 +130,45 @@ class Feria():
             producto_comprado = check_num("Introduzca el número del producto que desea comprar: ")
             producto_comprado = int(producto_comprado)
 
-            cantidad_producto = check_num("Introduzca la cantidad que desea comprar: ")
-            cantidad_producto = int(cantidad_producto)
+            if type(lista_productos[producto_comprado-1]) == Alimento:
+                cantidad_producto = check_num("Introduzca la cantidad que desea comprar: ")
+                cantidad_producto = int(cantidad_producto)
 
-            if cantidad_producto > int(lista_productos[producto_comprado-1].get_cantidad()):
-                print("Ha excedido el número de artículos disponibles. Intente nuevamente")
-                continue
+                alimento = lista_productos[producto_comprado-1]
+                
+                nueva_cantidad = alimento.delete_inventory(cantidad_producto)
 
-            nueva_cantidad = lista_productos[producto_comprado-1].delete_inventory(cantidad_producto)
+                alimento.set_cantidad(nueva_cantidad)
 
-            lista_productos[producto_comprado-1].set_cantidad(nueva_cantidad)
+                costo += (float(alimento.get_precio()))*cantidad_producto
 
-            costo += (float(lista_productos[producto_comprado-1].get_precio()))*cantidad_producto
+            if type(lista_productos[producto_comprado-1]) == Bebida:
+
+                tamanho = check_op(1,3, "Seleccione el tamaño de la bebida: \n1.-Pequeña\n2.-Mediana\n3.-Grande\n==>")
+                tamanho = int(tamanho)
+
+                cantidad_producto = check_num("Introduzca la cantidad que desea comprar: ")
+                cantidad_producto = int(cantidad_producto)
+
+                bebida = lista_productos[producto_comprado-1]
+
+                nueva_cantidad = bebida.delete_inventory_bebida(tamanho, cantidad_producto)
+
+                bebida.set_cantidad_bebida(tamanho, nueva_cantidad)
+
+                costo += (float(bebida.get_precio()[tamanho-1]))*cantidad_producto
+
 
             cont = 0
             while cont < cantidad_producto:
-                carrito.append(lista_productos[producto_comprado-1].get_nombre_producto())   # Añadir a la lista de productos a comprar
-                subtotal.append(float(lista_productos[producto_comprado-1].get_precio()))        # Añadir a la lista de subtotales
-                cont += 1
+                if type(lista_productos[producto_comprado-1]) == Bebida:
+                    carrito.append(lista_productos[producto_comprado-1].get_nombre_producto())   # Añadir a la lista de productos a comprar
+                    subtotal.append(float(lista_productos[producto_comprado-1].get_precio()[tamanho-1]))        # Añadir a la lista de subtotales de las bebidas
+                    cont += 1
+                else:
+                    carrito.append(lista_productos[producto_comprado-1].get_nombre_producto())   # Añadir a la lista de productos a comprar
+                    subtotal.append(float(lista_productos[producto_comprado-1].get_precio()))        # Añadir a la lista de subtotales
+                    cont += 1
 
             op = check_op(1,2,"¿Desea comprar otro producto? \n1.-Sí \n2.-No \n==>")
 
@@ -179,6 +182,9 @@ class Feria():
         cedula = int(cedula)
         narcisista = check_narcissistic(cedula)
         if narcisista == True:
+            print("")
+            print("~ ¡Felicidades, se le ha otorgado un descuento del 15%! ~")
+            print("")
             descuento = costo_total * 0.15
         else:
             descuento = 0
@@ -187,12 +193,13 @@ class Feria():
 
         costo_total = (costo + iva) - descuento
 
+
         ###### IMPRIMIR FACTURA  #####
 
         for cliente in range(len(client_db)):
-            if client_db[cliente].get_cedula() == cedula:
-                client = client_db[cliente]
-
+            if client_db[cliente].get_cedula() == str(cedula):     
+                client = client_db[cliente]         
+                
         print("********* FACTURA ***********")
 
         print("*Datos de compra:")
@@ -200,20 +207,34 @@ class Feria():
             \nEdad: {client.get_edad()}
             \nCédula: {client.get_cedula()}''')
         print("-------")
-        
+        print("Artículos:")
         for art in range(len(carrito)):
             print(f"1 {carrito[art]}")
             print("")
         print("")
         print(f"*Subtotal: ${sum(subtotal)}")
         print("-------")
-        print(f"*Descuento: -{descuento}")
-        print("-------")
+        if descuento != 0:
+            print(f"*Descuento: -{descuento}")
+            print("-------")
         print(f"*IVA: +{iva}")
         print("-------")
         print(f"*Monto total: ${costo_total}")
 
         op_pagar = check_op(1,2, "¿Desea proceder a pagar? \n1.-Sí \n2.-No\n==>")
+
+        if op_pagar == 1:
+            print("")
+            print("¡Su pago se ha procesado correctamente!")
+            print("")
+            return lista_productos
+
+        elif op_pagar == 2:
+            return -1
+
+        
+
+
 
 
 
