@@ -17,7 +17,6 @@ def main():
     lista_articulos = Feria(assign_producto(lista_articulos))
 
     
-    
     while True:
 
         #lista_asientos_ocupados = read_db("asientos_ocupados.txt", lista_asientos_ocupados)
@@ -26,13 +25,14 @@ def main():
         print("***BIENVENIDO A SAMAN SHOW***")
         print("")
                               #Menú principal
-        op = check_op(1, 6, '''Ingrese la opción que desea realizar:
+        op = check_op(1, 7, '''Ingrese la opción que desea realizar:
             \n1.- Gestión eventos
-            \n2.- Comprar Tickets
+            \n2.- Comprar tickets
             \n3.- Gestión Feria
-            \n4.- Venta Feria
+            \n4.- Comprar productos
             \n5.- Estadísticas
-            \n6.- Salir
+            \n6.- Reestablecer base de datos
+            \n7.- Salir
             \n==>''') 
 
         if op == 1:   #MÓDULO 1: Opción "ver eventos" abre un submenú
@@ -74,16 +74,15 @@ def main():
 
         if op == 2:       #MÓDULO 2: Venta de tickets
             clients_db = Taquilla(read_db("Clientes_tickets.txt", clients_db))
-            client_event = clients_db.comprar_tickets(lista_eventos,lista_asientos_ocupados)
+            client_event = clients_db.comprar_tickets(lista_eventos, lista_asientos_ocupados)
             
             
             if client_event == -1:    #Cliente declina el pago
                 continue
             else:                     #Cliente acepta realizar el pago
                 print("Su compra ha sido completada exitosamente.")
-
                 clients_db.get_db().append(client_event)
-                load_db("Clientes_tickets.txt", clients_db)
+                load_db("Clientes_tickets.txt", clients_db.get_db())
 
 
         if op == 3:      #MÓDULO 3: Gestión de artículos de la feria
@@ -133,7 +132,7 @@ def main():
                 print("")
 
             else:
-                clients_list = clients_db.get_food_db().get_db()
+                clients_list = clients_db.get_food_db()
                 lista_articulos.show_products()
                 lista_articulos = lista_articulos.comprar_comida(id_confirmation, clients_list)
 
@@ -146,11 +145,20 @@ def main():
 
         if op == 5:  # MÓDULO 5: Estadísticas
             pass
+        
+        if op == 6:    # Reestablecer la información de la base de datos
+            lista_articulos = []
+            lista_eventos = []
 
+            lista_eventos = Taquilla(assign_event(lista_eventos))                                            
+    
+            lista_articulos = Feria(assign_producto(lista_articulos))
+            print("")
+            print("¡Datos reestablecidos!")
+            print("")
 
-        if op == 6:   #Salir de la aplicación 
+        if op == 7:   #Salir de la aplicación 
             print("¡Hasta pronto!")
             break
         
-
 main()
