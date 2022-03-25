@@ -19,7 +19,7 @@ class Taquilla():
         lista_events = self.__db
 
         print("")
-        print("    ------------------EVENTOS-------------------     ")   #FIXME AÑADIR A CADA SUBCLASE EL ATRIBUTO SHOW
+        print("    ------------------EVENTOS-------------------     ")   
         print("")
         for eve in range(len(lista_events)):
             if lista_events[eve].get_disponibilidad() == True:
@@ -43,18 +43,11 @@ class Taquilla():
                     print(f"--> {lista_events[eve].get_cartel()[cart]}")
 
                 print("")
-                print("-Asientos:")               #ANCHOR Dejar así por ahora
-                layout = lista_events[eve].get_asientos()
-                for tipo, asiento in layout.items():
-                    if tipo == "general":
-                        print("")
-                        print("*General:") 
-                        matrix(asiento[0], asiento[1], "G")
-
-                    elif tipo == "vip":
-                        print("")
-                        print("*VIP:") 
-                        matrix(asiento[0], asiento[1], "V")   
+                print(f'''-Asientos: 
+                \n*Generales: 
+                \n{lista_events[eve].get_asientos_general()} 
+                \n*VIP:
+                \n{lista_events[eve].get_asientos_vip()}''')    
             
                 print("")
                 print("-Precios:")
@@ -68,7 +61,8 @@ class Taquilla():
                 print(f"-Nombre: {lista_events[eve].get_nombre_evento()}")
                 print("")
                 print("***** El evento se encuentra cerrado *****") 
-                    
+           
+                        
     
     ##### ABRIR O CERRAR EVENTOS ######
     
@@ -172,35 +166,25 @@ class Taquilla():
 
         ### Enseñar los asientos del evento que ingrese el cliente ###  
         
-        matriz_general = []
-        matriz_vip = []
+        
         inside_db = False
         while inside_db == False:
 
             evento = check_let("Ingrese el nombre del evento que desea comprar:\n-->")
-
-            for eve in range(len(lista_events.get_db())):
-                if lista_events.get_db()[eve].get_nombre_evento() == evento:
-                    inside_db = True
-                    layout = lista_events.get_db()[eve].get_asientos()
-                    for tipo, asiento in layout.items():
-                        if tipo == "general":
-                            print("")
-                            print("*General:") 
-                            matrix(asiento[0], asiento[1], "G")   #Se llama a la función matrix para enseñar los puestos en general
-                            
-                            for x in range(1, (asiento[0]*asiento[1])+1):   #Guarda los asientos generales en una lista
-                                matriz_general.append(f"G{x}")
-
-                        elif tipo == "vip":
-                            print("")
-                            print("*VIP:") 
-                            matrix(asiento[0], asiento[1], "V")    #Se llama a la función matrix para enseñar los puestos libres en VIP
-                            
-                            for x in range(1, (asiento[0]*asiento[1])+1):    #Guarda los asientos vip en una lista
-                                 matriz_vip.append(f"V{x}")
-                           
             
+            lista = lista_events.get_db()
+            for eve in range(len(lista)):
+                if lista[eve].get_nombre_evento() == evento:
+                    inside_db = True
+                    print(f'''-Asientos: 
+                    \n*Generales: 
+                    \n{lista[eve].get_asientos_general()} 
+                    \n*VIP:
+                    \n{lista[eve].get_asientos_vip()}''') 
+
+                    matriz_general = lista[eve].get_asientos_general()
+                    matriz_vip = lista[eve].get_asientos_vip()
+                                        
             if inside_db == False: 
                 print("Error, el nombre que ha ingresado no se encuentra en la base de datos.Intente nuevamente.")
                 continue
@@ -209,10 +193,9 @@ class Taquilla():
                             \n1.-General
                             \n2.-VIP
                             \n==>''')
-        if tipo_asiento == 1:    #Asegurar que el número de tickets deseados no exceda el número de asientos del evento
-            tickets = check_op(1, len(matriz_general),"Ingrese el número de tickets que desea comprar:\n-->")
-        else:
-            tickets = check_op(1, len(matriz_vip),"Ingrese el número de tickets que desea comprar:\n-->")
+        
+        
+        tickets = check_num("Ingrese el número de tickets que desea comprar:\n-->")
         tickets = int(tickets)
 
         print("")
@@ -224,56 +207,51 @@ class Taquilla():
                             ######SELECCIÓN DE ASIENTOS#####  #FIXME SOLO FUNCIONA PARA UN EVENTO
         
         asientos= []       #Lista de asientos del cliente                  
-        
         while tickets > cont:      
 
             if tipo_asiento == 1:      
-                asiento = check_num('''Ingrese el número del asiento (Ejemplo: G10. Ingresar '10'):
+                asiento = input('''Ingrese el asiento que desea (Ejemplo: A6. Ingresar 'A6'):
                                 \n==>''')  
-                asiento = int(asiento) 
-                if len(lista_asiento) == 0:
-                    asientos.append(matriz_general[asiento-1])    
-                    lista_asiento.append(matriz_general[asiento-1])   #Lista de asientos ocupados en general
-                    cont += 1 
-                else:
-                    for spot in range(len(lista_asiento)):
-                        if lista_asiento[spot] == matriz_general[asiento-1]:
-                            print("El asiento seleccionado ya se encuentra ocupado")                
-
-                        else:
-                            asientos.append(matriz_general[asiento-1])    
-                            lista_asiento.append(matriz_general[asiento-1])  
+                inside_asiento = False
+                for fila in range(len(matriz_general)):
+                    for spot in range(len(matriz_general[fila])):
+                        if matriz_general[fila][spot] == asiento:
+                            inside_asiento = True
+                            asientos.append(matriz_general[fila][spot])
+                            matriz_general[fila][spot] = "X"
                             cont += 1
-                            break
 
+                if inside_asiento == False:   
+                    print("El asiento está ocupado. Ingrese otro.")
+                    
+        
             elif tipo_asiento == 2:   
-                asiento = check_num('''Ingrese el número del asiento (Ejemplo: V1-2. Ingresar '1-2'):
+                asiento = input('''Ingrese el asiento que desea (Ejemplo: V1. Ingresar 'V1'):
                                 \n==>''')
-                asiento = int(asiento) 
-                if len(lista_asiento) == 0:
-                    asientos.append(matriz_vip[asiento-1])    
-                    lista_asiento.append(matriz_vip[asiento-1])  
-                    cont += 1 
-                else:
-                    for spot in range(len(lista_asiento)):
-                        if lista_asiento[spot] == matriz_vip[asiento-1]:
-                            print("El asiento seleccionado ya se encuentra ocupado")                
 
-                        else:
-                            asientos.append(matriz_vip[asiento-1])    
-                            lista_asiento.append(matriz_vip[asiento-1])  
+                inside_asiento = False
+                for fila in range(len(matriz_vip)):
+                    for spot in range(len(matriz_vip[fila])):
+                        if matriz_vip[fila][spot] == asiento:
+                            inside_asiento = True
+                            asientos.append(matriz_vip[fila][spot])
+                            matriz_vip[fila][spot] = "X"
                             cont += 1
-                            break
 
+                if inside_asiento == False:   
+                    print("El asiento está ocupado. Ingrese otro.")
+
+        
+        
         client = Cliente(cedula = cedula, nombre = name, edad = age, entradas = tickets, evento = evento, asientos = asientos)
 
 
         ###### CALCULAR COSTOS ######
         
 
-        for eve in range(len(lista_events.get_db())):
-                if lista_events.get_db()[eve].get_nombre_evento() == evento:
-                    precios = lista_events.get_db()[eve].get_precio()
+        for eve in range(len(lista)):
+                if lista[eve].get_nombre_evento() == evento:
+                    precios = lista[eve].get_precio()
                                 
 
                     if tipo_asiento == 1:           #IF VAMPIRE == TRUE 
@@ -311,8 +289,14 @@ class Taquilla():
 
         if op == 1:
 
-            #load_db("asientos_ocupados.txt", lista_asiento)  #carga asientos seleccionados a la lista grande
-            
+            for eve in range(len(lista)):
+                if lista[eve].get_nombre_evento() == evento:
+                    if tipo_asiento == 1:
+                        lista[eve].set_asientos_general(matriz_general)
+                    else:
+                        lista[eve].set_asientos_vip(matriz_vip)
+
+
             return client    #Si la respuesta es "sí" se devuelve el objeto con la información
             
 
