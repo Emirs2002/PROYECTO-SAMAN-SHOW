@@ -1,8 +1,9 @@
 class Evento():
-    def __init__(self, nombre_evento, cartel, asientos, fecha, precio, tipo, disponibilidad):
+    def __init__(self, nombre_evento, cartel, asientos_general, asientos_vip, fecha, precio, tipo, disponibilidad):
         self.__nombre_evento = nombre_evento
         self.__cartel = cartel
-        self.__asientos = asientos
+        self.__asientos_general = asientos_general
+        self.__asientos_vip = asientos_vip
         self.__fecha = fecha                        
         self.__precio = precio
         self.__tipo = tipo
@@ -14,11 +15,17 @@ class Evento():
     def get_cartel(self):
         return self.__cartel
     
-    def get_asientos(self):
-        return self.__asientos
+    def get_asientos_general(self):
+        return self.__asientos_general
 
-    def set_asientos(self, new_asientos):
-        self.__asientos = new_asientos
+    def set_asientos_general(self, new_asientos):
+        self.__asientos_general = new_asientos
+    
+    def get_asientos_vip(self):
+        return self.__asientos_vip
+
+    def set_asientos_vip(self, new_asientos):
+        self.__asientos_vip = new_asientos
     
     def get_fecha(self):
         return self.__fecha
