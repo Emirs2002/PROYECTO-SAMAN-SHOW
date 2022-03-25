@@ -1,8 +1,8 @@
 from Evento import Evento
 
 class Teatro(Evento):
-    def __init__(self, nombre_evento, cartel, asientos, fecha, precio, tipo, sinopsis):
-        Evento.__init__(self, nombre_evento, cartel, asientos, fecha, precio, tipo)
+    def __init__(self, nombre_evento, cartel, asientos, fecha, precio, tipo, disponibilidad, sinopsis):
+        Evento.__init__(self, nombre_evento, cartel, asientos, fecha, precio, tipo, disponibilidad)
 
         self.__sinopsis = sinopsis
 

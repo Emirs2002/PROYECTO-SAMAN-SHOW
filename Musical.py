@@ -1,9 +1,9 @@
 from Evento import Evento
 
 class Musical(Evento):
-    def __init__(self, nombre_evento, cartel, asientos, fecha, precio, tipo, num_bandas):
+    def __init__(self, nombre_evento, cartel, asientos, fecha, precio, tipo, disponibilidad, num_bandas):
         
-        Evento.__init__(self, nombre_evento, cartel, asientos, fecha, precio, tipo)
+        Evento.__init__(self, nombre_evento, cartel, asientos, fecha, precio, tipo, disponibilidad)
 
         self.__num_bandas = num_bandas
 
