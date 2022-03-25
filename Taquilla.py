@@ -18,53 +18,79 @@ class Taquilla():
         
         lista_events = self.__db
 
-        lista_events = quick_sort(lista_events)
-
         print("")
         print("    ------------------EVENTOS-------------------     ")   #FIXME AÑADIR A CADA SUBCLASE EL ATRIBUTO SHOW
         print("")
         for eve in range(len(lista_events)):
+            if lista_events[eve].get_disponibilidad() == True:
+                print("")
+                print(f" --------- Evento {eve+1} -----------")
+                print("")
+                print(f'''-Nombre: {lista_events[eve].get_nombre_evento()}
+                        \n-Fecha: {lista_events[eve].get_fecha()}''')
+                        
+                if lista_events[eve].get_tipo() == 1:
+                    print("-Tipo: Musical")
+                    print(f"-Bandas: {lista_events[eve].get_num_bandas()}")
+
+                elif lista_events[eve].get_tipo() == 2:
+                    print("-Tipo: Obra de teatro")
+                    print(f"-Sinopsis: {lista_events[eve].get_sinopsis()}")
+
+                print("")
+                print("-Cartel:")
+                for cart in range(len(lista_events[eve].get_cartel())):
+                    print(f"--> {lista_events[eve].get_cartel()[cart]}")
+
+                print("")
+                print("-Asientos:")               #ANCHOR Dejar así por ahora
+                layout = lista_events[eve].get_asientos()
+                for tipo, asiento in layout.items():
+                    if tipo == "general":
+                        print("")
+                        print("*General:") 
+                        matrix(asiento[0], asiento[1], "G")
+
+                    elif tipo == "vip":
+                        print("")
+                        print("*VIP:") 
+                        matrix(asiento[0], asiento[1], "V")   
             
-            print(f'''-Nombre: {lista_events[eve].get_nombre_evento()}
-                    \n-Fecha: {lista_events[eve].get_fecha()}''')
-                    
-            if lista_events[eve].get_tipo() == 1:
-                print("-Tipo: Musical")
-                print(f"-Bandas: {lista_events[eve].get_num_bandas()}")
+                print("")
+                print("-Precios:")
+                print(f"*General: ${lista_events[eve].get_precio()[0]}")
+                print(f"*VIP: ${lista_events[eve].get_precio()[1]}")    
 
-            elif lista_events[eve].get_tipo() == 2:
-                print("-Tipo: Obra de teatro")
-                print(f"-Sinopsis: {lista_events[eve].get_sinopsis()}")
-
-            print("")
-            print("-Cartel:")
-            for cart in range(len(lista_events[eve].get_cartel())):
-                print(f"--> {lista_events[eve].get_cartel()[cart]}")
-
-            print("")
-            print("-Asientos:")               #ANCHOR Dejar así por ahora
-            layout = lista_events[eve].get_asientos()
-            for tipo, asiento in layout.items():
-                if tipo == "general":
-                    print("")
-                    print("*General:") 
-                    matrix(asiento[0], asiento[1], "G")
-
-                elif tipo == "vip":
-                    print("")
-                    print("*VIP:") 
-                    matrix(asiento[0], asiento[1], "V")   
+                print("")
+                print("-----------------------------------------------------")
+                print("") 
+            elif lista_events[eve].get_disponibilidad() == False:
+                print(f"-Nombre: {lista_events[eve].get_nombre_evento()}")
+                print("")
+                print("***** El evento se encuentra cerrado *****")
+    
+    ##### ABRIR O CERRAR EVENTOS ######
+    
+    def change_availability(self):
         
-            print("")
-            print("-Precios:")
-            print(f"*General: ${lista_events[eve].get_precio()[0]}")
-            print(f"*VIP: ${lista_events[eve].get_precio()[1]}")    
+        lista_events = self.__db  
 
-            print("")
-            print("-----------------------------------------------------")
-            print("") 
+        evento = check_num("Selecciona el número del evento que desees cerrar:\n==>")
+        evento = int(evento)
+
+        op = check_op(1,2,"¿Está seguro de que desea proceder? \n1.-Sí \n2.-No \n==>")
         
-    def search_event(self, num): #Busca el evento de acuerdo al filtro introducido por el usuario
+
+        if op == 1:
+            lista_events[evento-1].set_disponibilidad(False)
+            return lista_events
+        if op == 2:
+            return lista_events
+
+
+    ##### BUSCAR POR FILTROS #####
+
+    def search_event(self, num):   #Busca el evento de acuerdo al filtro introducido por el usuario
 
         lista_events = self.__db                   
                                 
