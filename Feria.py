@@ -102,8 +102,8 @@ class Feria():
         cedula = check_num("Ingrese su cédula: \n==>")
 
         cedula_inside = False
-        for client in range(len(clientes_list.get_db())):
-            if clientes_list.get_db()[client].get_cedula() == cedula:
+        for client in range(len(clientes_list)):
+            if clientes_list[client].get_cedula() == cedula:
                 cedula_inside = True
                 break
             else:
@@ -185,7 +185,7 @@ class Feria():
             print("")
             print("~ ¡Felicidades, se le ha otorgado un descuento del 15%! ~")
             print("")
-            descuento = costo_total * 0.15
+            descuento = costo * 0.15
         else:
             descuento = 0
 
@@ -193,41 +193,51 @@ class Feria():
 
         costo_total = (costo + iva) - descuento
 
-
-        ###### IMPRIMIR FACTURA  #####
-
-        for cliente in range(len(client_db)):
-            if client_db[cliente].get_cedula() == str(cedula):     
-                client = client_db[cliente]         
-                
-        print("********* FACTURA ***********")
-
-        print("*Datos de compra:")
-        print(f'''Nombre: {client.get_nombre()}
-            \nEdad: {client.get_edad()}
-            \nCédula: {client.get_cedula()}''')
-        print("-------")
-        print("Artículos:")
-        for art in range(len(carrito)):
-            print(f"1 {carrito[art]}")
-            print("")
         print("")
-        print(f"*Subtotal: ${sum(subtotal)}")
-        print("-------")
-        if descuento != 0:
-            print(f"*Descuento: -{descuento}")
-            print("-------")
-        print(f"*IVA: +{iva}")
-        print("-------")
-        print(f"*Monto total: ${costo_total}")
+        print("Costo total:")
+        print(f"${costo_total}")
+        print("")
 
-        op_pagar = check_op(1,2, "¿Desea proceder a pagar? \n1.-Sí \n2.-No\n==>")
+        ### PREGUNTAR AL USUARIO SI VA A PAGAR ### 
+        
+        op_pagar = check_op(1,2, "¿Desea proceder a pagar? \n1.-Sí \n2.-No\n==>")   
 
         if op_pagar == 1:
             print("")
             print("¡Su pago se ha procesado correctamente!")
             print("")
+
+                ###### IMPRIMIR FACTURA  #####
+
+            for cliente in range(len(client_db)):
+                if client_db[cliente].get_cedula() == str(cedula):     
+                    client = client_db[cliente]         
+            
+            print("")        
+            print("********* FACTURA ***********")
+            print("")
+
+            print("*Datos de compra:")
+            print(f'''Nombre: {client.get_nombre()}
+                \nEdad: {client.get_edad()}
+                \nCédula: {client.get_cedula()}''')
+            print("-------")
+            print("Artículos:")
+            for art in range(len(carrito)):
+                print(f"-> {carrito[art]}")
+                print("")
+            print("")
+            print(f"*Subtotal: ${sum(subtotal)}")
+            print("-------")
+            if descuento != 0:
+                print(f"*Descuento: -{descuento}")
+                print("-------")
+            print(f"*IVA: + ${iva}")
+            print("-------")
+            print(f"*Monto total: ${costo_total}")
+
             return lista_productos
+
 
         elif op_pagar == 2:
             return -1
