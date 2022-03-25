@@ -96,40 +96,6 @@ def assign_event(lista_events):
         
         return lista_events
 
-###  Ordenar eventos por nombre ###
-
-def quick_sort(lista):    
-
-    if len(lista) <=1:
-        return lista    
-
-    objeto = lista[0]
-    pivote = objeto.get_nombre_evento()
-    menores = []
-    mayores = []
-    for event in range(1, len(lista)):
-        evento = lista[event].get_nombre_evento()
-        if evento > pivote:
-            mayores.append(lista[event])
-        else:
-            menores.append(lista[event])
-    return quick_sort(menores) + [objeto] + quick_sort(mayores)
-
-
-#Búsqueda Binaria
-
-def binary_search(lista, key):
-    if len(lista) == 0:
-        return None
-    mid = len(lista)//2
-    if lista[mid].get_average() is not None:
-        return lista[mid]
-    elif key < lista[mid].get_average():
-        return binary_search(lista[0:mid], key)
-    else:
-        return binary_search(lista[mid+1:], key)
-   
-
 ### Hacer matrices de filas y columnas especificadas por el usuario ### 
 
 def matrix(filas, columnas, let):    
@@ -145,17 +111,29 @@ def matrix(filas, columnas, let):
                 cont +=1
         print("")
 
-### Determinar si un número dado es vampiro ######
-def check_vampire(num):                          
-    
-    first_mid = []          #AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA T-T  
-    second_mid = []                         #FIXME VAMPIROS
-    if len(num) % 2 == 0:   
-        pass                        #Tienen una cantidad par de dígitos.
-       
-    else:
-        return False                       
+#####3 DETERMINAR EL FACTORIAL DE UN NÚMERO ######  
 
+def factorial(num):
+    if num == 1:
+        return num
+    else:
+        return factorial(num-1)*num
+
+### Determinar si un número dado es vampiro ######
+
+def check_vampire(num): 
+    longitud = len(str(num))
+
+    if longitud % 2 != 0:  
+        return False
+    else:
+        n = factorial(longitud) 
+        r = factorial(longitud//2)
+        n_r = factorial(longitud - (longitud//2))
+
+        resultado = (n/(r*(n_r)))     # FÓRMULA DE COMBINACIONES
+                     
+   
 ######## Adquirir la información del API para los productos #######
 
 def assign_producto(lista_products):
