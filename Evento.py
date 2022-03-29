@@ -42,6 +42,22 @@ class Evento():
     def set_disponibilidad(self, new_disponibilidad):
         self.__disponibilidad = new_disponibilidad
 
+    def show_asientos(self):
+        
+        asientos_general = self.get_asientos_general()
+        asientos_vip = self.get_asientos_vip()
+
+        print("")
+        print("*Generales:")
+        for renglon in range(len(asientos_general)):
+            print(asientos_general[renglon])
+        print("")
+        print("*VIP:")
+        for renglon in range(len(asientos_vip)):
+            print(asientos_vip[renglon])
+
+
+
     
 
 
