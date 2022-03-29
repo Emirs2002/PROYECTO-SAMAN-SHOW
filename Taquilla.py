@@ -22,45 +22,28 @@ class Taquilla():
         print("    ------------------EVENTOS-------------------     ")   
         print("")
         for eve in range(len(lista_events)):
-            if lista_events[eve].get_disponibilidad() == True:
-                print("")
-                print(f" --------- Evento {eve+1} -----------")
-                print("")
-                print(f'''-Nombre: {lista_events[eve].get_nombre_evento()}
-                        \n-Fecha: {lista_events[eve].get_fecha()}''')
-                        
-                if lista_events[eve].get_tipo() == 1:
-                    print("-Tipo: Musical")
-                    print(f"-Bandas: {lista_events[eve].get_num_bandas()}")
-
-                elif lista_events[eve].get_tipo() == 2:
-                    print("-Tipo: Obra de teatro")
-                    print(f"-Sinopsis: {lista_events[eve].get_sinopsis()}")
-
-                print("")
-                print("-Cartel:")
-                for cart in range(len(lista_events[eve].get_cartel())):
-                    print(f"--> {lista_events[eve].get_cartel()[cart]}")
-
-                print("")
-                print(f'''-Asientos: 
-                \n*Generales: 
-                \n{lista_events[eve].get_asientos_general()} 
-                \n*VIP:
-                \n{lista_events[eve].get_asientos_vip()}''')    
-            
-                print("")
-                print("-Precios:")
-                print(f"*General: ${lista_events[eve].get_precio()[0]}")
-                print(f"*VIP: ${lista_events[eve].get_precio()[1]}")    
-
+            evento = lista_events[eve]
+            print("")
+            print(f" --------- Evento {eve+1} -----------")
+            print("")
+            if evento.get_disponibilidad() == True:
+                if evento.get_tipo() == 1:
+                    evento.show_musical()
+                elif evento.get_tipo() == 2:
+                    evento.show_teatro()
                 print("")
                 print("-----------------------------------------------------")
                 print("") 
-            elif lista_events[eve].get_disponibilidad() == False:
+
+            elif evento.get_disponibilidad() == False:
+
                 print(f"-Nombre: {lista_events[eve].get_nombre_evento()}")
                 print("")
-                print("***** El evento se encuentra cerrado *****") 
+                print("***** El evento se encuentra cerrado *****")
+
+                print("")
+                print("-----------------------------------------------------")
+                print("")  
            
                         
     
@@ -70,17 +53,36 @@ class Taquilla():
         
         lista_events = self.__db  
 
-        evento = check_num("Selecciona el número del evento que desees cerrar:\n==>")
-        evento = int(evento)
-
-        op = check_op(1,2,"¿Está seguro de que desea proceder? \n1.-Sí \n2.-No \n==>")
+        op = check_op(1,3, "Seleccione la opción que desea ejecutar: \n1.-Aperturar \n2.-Cerrar \n3.-Volver\n==>")
         
-
         if op == 1:
-            lista_events[evento-1].set_disponibilidad(False)
-            return lista_events
+
+            evento = check_num("Ingrese el número del evento que desee abrir:\n==>")
+            evento = int(evento)
+
+            op = check_op(1,2,"¿Está seguro de que desea proceder? \n1.-Sí \n2.-No \n==>")
+        
+            if op == 1:
+                lista_events[evento-1].set_disponibilidad(True)
+                return lista_events
+            if op == 2:
+                return lista_events
+        
         if op == 2:
-            return lista_events
+            
+            evento = check_num("Ingrese el número del evento que desees cerrar:\n==>")
+            evento = int(evento)
+
+            op = check_op(1,2,"¿Está seguro de que desea proceder? \n1.-Sí \n2.-No \n==>")
+        
+            if op == 1:
+                lista_events[evento-1].set_disponibilidad(False)
+                return lista_events
+            if op == 2:
+                return lista_events
+        
+        if op == 3:
+            pass
 
 
     ##### BUSCAR POR FILTROS #####
@@ -99,9 +101,10 @@ class Taquilla():
                                 \n1.-Musical
                                 \n2.-Obra de teatro\n-->''')
             print("Resultados de su búsqueda:")
-            for event in range(len(lista_events)): 
-                if lista_events[event].get_tipo() == op: 
-                    lista_tipo.append(lista_events[event])
+            for event in range(len(lista_events)):
+                evento = lista_events[event]
+                if evento.get_tipo() == op: 
+                    lista_tipo.append(evento)
                 else:
                     continue
             
@@ -111,17 +114,20 @@ class Taquilla():
     #######   F E C H A   #######     
         if num == 2: 
             lista_fecha = []
+
+            year = check_num("Ingrese el año del evento:\n==>")
+            year = str(year)
+
             mes = check_num("Ingrese el mes del evento (Intoducir dos dígitos. Ejemplo: abril = '04'):\n==>")
             
             mes = str(mes)
-
+            print(year+"-"+mes)
             for event in range(len(lista_events)): 
-
-                lista = lista_events[event].get_fecha().split("-")
-
-                for fecha in range(len(lista)-1):       
-                    if lista[fecha] == mes:
-                        lista_fecha.append(lista_events[event])
+                evento = lista_events[event]
+                lista = evento.get_fecha().split("-")
+                
+                if lista[0] == year and lista[1] == mes:
+                    lista_fecha.append(evento)
             
             return lista_fecha
 
@@ -131,10 +137,12 @@ class Taquilla():
 
             op_performer = check_let('''Ingrese el nombre del actor o cantante:   
                                 \n==>''')  
-            for event in range(len(lista_events)):               
-                for performer in range(len(lista_events[event].get_cartel())):
-                    if lista_events[event].get_cartel()[performer] == op_performer:
-                        lista_performer.append(lista_events[event])
+            for event in range(len(lista_events)):
+                evento = lista_events[event]
+
+                for performer in range(len(evento.get_cartel())):
+                    if evento.get_cartel()[performer] == op_performer:
+                        lista_performer.append(evento)
 
             return lista_performer
 
@@ -147,14 +155,15 @@ class Taquilla():
                                 \n==>''')  
          
             for event in range(len(lista_events)): 
-                if lista_events[event].get_nombre_evento() == op_nom:                    
-                    lista_nombre.append(lista_events[event])  
+                evento = lista_events[event]
+                if evento.get_nombre_evento() == op_nom:                    
+                    lista_nombre.append(evento)  
             
             return lista_nombre
 
         ###########   MÓDULO 2 - COMPRA DE TICKETS ###########
 
-    def comprar_tickets(self, lista_events, lista_asiento):
+    def comprar_tickets(self, lista_events):
         
         name = check_let("Ingrese su nombre:\n-->")
         
@@ -176,11 +185,8 @@ class Taquilla():
             for eve in range(len(lista)):
                 if lista[eve].get_nombre_evento() == evento:
                     inside_db = True
-                    print(f'''-Asientos: 
-                    \n*Generales: 
-                    \n{lista[eve].get_asientos_general()} 
-                    \n*VIP:
-                    \n{lista[eve].get_asientos_vip()}''') 
+                    print(f'''-Asientos:''') 
+                    lista[eve].show_asientos()
 
                     matriz_general = lista[eve].get_asientos_general()
                     matriz_vip = lista[eve].get_asientos_vip()
@@ -264,7 +270,7 @@ class Taquilla():
                         subtotal = precios[1]*tickets
                         costo = (precios[1]*tickets)+iva
                         
-    
+
             ###### MOSTRAR FACTURA #######        #NOTE agregar descuento luego
        
         print("********* FACTURA ***********")
