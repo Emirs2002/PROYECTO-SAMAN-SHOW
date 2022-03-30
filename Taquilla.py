@@ -1,9 +1,6 @@
 
 from Cliente import Cliente
 from tools import *
-from Evento import Evento
-from Musical import Musical
-from Teatro import Teatro
 from Cliente import Cliente
 class Taquilla():
     def __init__(self, db):        
@@ -179,17 +176,18 @@ class Taquilla():
         inside_db = False
         while inside_db == False:
 
-            evento = check_let("Ingrese el nombre del evento que desea comprar:\n-->")
+            evento_escogido = check_let("Ingrese el nombre del evento que desea comprar:\n-->")
             
             lista = lista_events.get_db()
             for eve in range(len(lista)):
-                if lista[eve].get_nombre_evento() == evento:
+                evento = lista[eve]
+                if evento.get_nombre_evento() == evento_escogido and evento.get_disponibilidad() == True:
                     inside_db = True
                     print(f'''-Asientos:''') 
-                    lista[eve].show_asientos()
+                    evento.show_asientos()
 
-                    matriz_general = lista[eve].get_asientos_general()
-                    matriz_vip = lista[eve].get_asientos_vip()
+                    matriz_general = evento.get_asientos_general()
+                    matriz_vip = evento.get_asientos_vip()
                                         
             if inside_db == False: 
                 print("Error, el nombre que ha ingresado no se encuentra en la base de datos.Intente nuevamente.")
@@ -247,16 +245,11 @@ class Taquilla():
                 if inside_asiento == False:   
                     print("El asiento está ocupado. Ingrese otro.")
 
-        
-        
-        client = Cliente(cedula = cedula, nombre = name, edad = age, entradas = tickets, evento = evento, asientos = asientos)
-
-
         ###### CALCULAR COSTOS ######
         
 
         for eve in range(len(lista)):
-                if lista[eve].get_nombre_evento() == evento:
+                if lista[eve].get_nombre_evento() == evento_escogido:
                     precios = lista[eve].get_precio()
                                 
 
@@ -270,6 +263,8 @@ class Taquilla():
                         subtotal = precios[1]*tickets
                         costo = (precios[1]*tickets)+iva
                         
+        client = Cliente(cedula = cedula, nombre = name, edad = age, dinero_pagado = costo)
+
 
             ###### MOSTRAR FACTURA #######        #NOTE agregar descuento luego
        
@@ -277,9 +272,12 @@ class Taquilla():
 
         print("*Datos de compra:")
         client.show_client_data()
+        print("")
+        print(f'''-Número de entradas: {tickets}
+                \n-Asientos: {asientos}''')
         print("-------")
-        for event in range(client.get_entradas()):
-            print(f"->1 Entrada {client.get_evento()}      ${subtotal/client.get_entradas()}" )
+        for event in range(tickets):
+            print(f"->1 Entrada {evento_escogido}     ${subtotal/tickets}" )
         print("")
         print(f"*Subtotal: ${subtotal}")
         #print("-------")
@@ -296,11 +294,12 @@ class Taquilla():
         if op == 1:
 
             for eve in range(len(lista)):
-                if lista[eve].get_nombre_evento() == evento:
+                evento = lista[eve]
+                if evento.get_nombre_evento() == evento_escogido:
                     if tipo_asiento == 1:
-                        lista[eve].set_asientos_general(matriz_general)
+                        evento.set_asientos_general(matriz_general)
                     else:
-                        lista[eve].set_asientos_vip(matriz_vip)
+                        evento.set_asientos_vip(matriz_vip)
 
 
             return client    #Si la respuesta es "sí" se devuelve el objeto con la información
