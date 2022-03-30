@@ -54,7 +54,6 @@ def check_op(lim1, lim2, msg):
 
 ########## Lectura de archivos ##########
 
-
 # recibir datos de la db #
 
 def read_db(txt, datos):
@@ -96,11 +95,11 @@ def assign_event(lista_events):
                     matriz_vip = matrix(asiento[0], asiento[1])  
 
             if db["events"][event]["type"] == 1:       
-                musical_obj = Musical(nombre_evento = db["events"][event]["title"], cartel = db["events"][event]["cartel"], asientos_general= matriz_general , asientos_vip= matriz_vip, fecha = db["events"][event]["date"], num_bandas = db["events"][event]["bands"], precio = db["events"][event]["prices"], tipo = db["events"][event]["type"], disponibilidad=True)
+                musical_obj = Musical(nombre_evento = db["events"][event]["title"], cartel = db["events"][event]["cartel"], asientos_general= matriz_general , asientos_vip= matriz_vip, fecha = db["events"][event]["date"], num_bandas = db["events"][event]["bands"], precio = db["events"][event]["prices"], tipo = db["events"][event]["type"], disponibilidad=True, ingreso= 0)
                 lista_events.append(musical_obj)
                 
             elif db["events"][event]["type"] == 2:
-                teatro_obj = Teatro(nombre_evento = db["events"][event]["title"], cartel =db["events"][event]["cartel"], asientos_general= matriz_general , asientos_vip= matriz_vip, fecha = db["events"][event]["date"], precio = db["events"][event]["prices"], sinopsis = db["events"][event]["synopsis"], tipo = db["events"][event]["type"], disponibilidad= True)
+                teatro_obj = Teatro(nombre_evento = db["events"][event]["title"], cartel =db["events"][event]["cartel"], asientos_general= matriz_general , asientos_vip= matriz_vip, fecha = db["events"][event]["date"], precio = db["events"][event]["prices"], sinopsis = db["events"][event]["synopsis"], tipo = db["events"][event]["type"], disponibilidad= True, ingreso= 0)
                 lista_events.append(teatro_obj)
         
         return lista_events
@@ -184,7 +183,7 @@ def check_narcissistic(num):
         
 ### ORDENAR LISTA DE OBJETOS POR PRECIO ###
 
-def quicksort(lista):
+def quicksort_dinero_pagado(lista):
 
     if len(lista) <= 1:
         return lista
@@ -198,6 +197,24 @@ def quicksort(lista):
             menores.append(lista[x])
         else:
             mayores.append(lista[x])
-    return quicksort(mayores) + [objeto] + quicksort(menores)
+    return quicksort_dinero_pagado(mayores) + [objeto] + quicksort_dinero_pagado(menores)
+
+### ORDENAR LISTA DE OBJETOS POR INGRESO ###
+
+def quicksort_ingreso(lista):
+
+    if len(lista) <= 1:
+        return lista
+    
+    objeto = lista[0]
+    pivote = objeto.get_ingreso()
+    menores = []
+    mayores = []
+    for x in range(1, len(lista)):
+        if lista[x].get_ingreso() < pivote:
+            menores.append(lista[x])
+        else:
+            mayores.append(lista[x])
+    return quicksort_ingreso(mayores) + [objeto] + quicksort_ingreso(menores)
 
     
