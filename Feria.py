@@ -1,7 +1,7 @@
 from tools import *
 from Bebida import Bebida
 from Alimento import Alimento
-from Taquilla import Taquilla
+
 class Feria():
     def __init__(self, food_db):
         self.__food_db = food_db
@@ -11,7 +11,7 @@ class Feria():
 
 
 
-    #######    MÓDULO 3   #######
+    #######    MÓDULO 3   #######               #NOTE COMENTAR TODO EL CÓDIGO
 
 
 
@@ -63,8 +63,9 @@ class Feria():
             op_nom = check_let("Ingrese el nombre del producto: \n==>")            
             
             for art in range(len(lista_productos)):
-                if lista_productos[art].get_nombre_producto() == op_nom:
-                    lista_nombre.append(lista_productos[art])
+                articulo = lista_productos[art]
+                if articulo.get_nombre_producto() == op_nom:
+                    lista_nombre.append(articulo)
             
             return lista_nombre
                    
@@ -77,19 +78,56 @@ class Feria():
                                 \n2.-Bebida\n-->''')
             print("Resultados de su búsqueda:")
             for art in range(len(lista_productos)): 
-                if lista_productos[art].get_clasificacion() == op_tipo: 
-                    lista_tipo.append(lista_productos[art])
+                articulo = lista_productos[art]
+                if articulo.get_clasificacion() == op_tipo: 
+                    lista_tipo.append(articulo)
                 else:
                     continue
             
             return lista_tipo
 
         #### P R E C I O S ####
+        lista_precios = []                #NOTE COMENTAR TODO
+        if num == 3:       
+            op_precio = check_op(1,3,'''Seleccione el rango de precios que desea consultar: 
+                    \n1.-Menor a $5 
+                    \n2.-De $5 a $10 
+                    \n3.-Mayor a $10 
+                    \n==>''')
 
-        if num == 3:        #ANCHOR HACERLO
-            pass
-        
+            for art in range(len(lista_productos)): 
+                articulo = lista_productos[art] 
+                if op_precio == 1:
+                    if articulo.get_clasificacion() == 1:
+                        if float(articulo.get_precio()) < 5:
+                            lista_precios.append(articulo)
+                    else:
+                        for precio in range(len(articulo.get_precio())):
+                            if float(articulo.get_precio()[precio]) < 5:
+                                lista_precios.append(articulo)
+                                break
 
+                if op_precio == 2:
+                    if articulo.get_clasificacion() == 1:
+                        if float(articulo.get_precio()) > 5 and float(articulo.get_precio()) < 10:
+                            lista_precios.append(articulo)
+                    else:
+                        for precio in range(len(articulo.get_precio())):
+                            if float(articulo.get_precio()[precio]) > 5 and float(articulo.get_precio()[precio]) < 10:
+                                lista_precios.append(articulo)
+                                break
+
+                if op_precio == 3:
+                    if articulo.get_clasificacion() == 1:
+                        if float(articulo.get_precio()) > 10:
+                            lista_precios.append(articulo)
+                    else:
+                        for precio in range(len(articulo.get_precio())):
+                            if float(articulo.get_precio()[precio]) > 10:
+                                lista_precios.append(articulo)
+                                break
+
+            return lista_precios
 
         #######    MÓDULO 4   #######
 
@@ -124,15 +162,27 @@ class Feria():
         
         carrito = []
         subtotal = []
+        indices = []
+        indices_bebidas = []
+        cantidad_alimento = []
+        cantidad_bebida = []
+        tamanho_list = []
         costo = 0
         while True:
 
             producto_comprado = check_num("Introduzca el número del producto que desea comprar: ")
             producto_comprado = int(producto_comprado)
 
+            
+
             if type(lista_productos[producto_comprado-1]) == Alimento:
+
+                indices.append(producto_comprado)
+
                 cantidad_producto = check_num("Introduzca la cantidad que desea comprar: ")
                 cantidad_producto = int(cantidad_producto)
+
+                cantidad_alimento.append(cantidad_producto)
 
                 alimento = lista_productos[producto_comprado-1]
                 
@@ -143,12 +193,18 @@ class Feria():
                 costo += (float(alimento.get_precio()))*cantidad_producto
 
             if type(lista_productos[producto_comprado-1]) == Bebida:
+                
+                indices_bebidas.append(producto_comprado)
 
                 tamanho = check_op(1,3, "Seleccione el tamaño de la bebida: \n1.-Pequeña\n2.-Mediana\n3.-Grande\n==>")
                 tamanho = int(tamanho)
 
+                tamanho_list.append(tamanho)
+
                 cantidad_producto = check_num("Introduzca la cantidad que desea comprar: ")
                 cantidad_producto = int(cantidad_producto)
+
+                cantidad_bebida.append(cantidad_producto)
 
                 bebida = lista_productos[producto_comprado-1]
 
@@ -194,7 +250,8 @@ class Feria():
         costo_total = (costo + iva) - descuento
 
         print("")
-        print("Costo total:")
+        print("Costo total de la compra:")
+        print("")
         print(f"${costo_total}")
         print("")
 
@@ -203,9 +260,7 @@ class Feria():
         op_pagar = check_op(1,2, "¿Desea proceder a pagar? \n1.-Sí \n2.-No\n==>")   
 
         if op_pagar == 1:
-            print("")
-            print("¡Su pago se ha procesado correctamente!")
-            print("")
+            
 
                 ###### IMPRIMIR FACTURA  #####
 
@@ -218,9 +273,7 @@ class Feria():
             print("")
 
             print("*Datos de compra:")
-            print(f'''Nombre: {client.get_nombre()}
-                \nEdad: {client.get_edad()}
-                \nCédula: {client.get_cedula()}''')
+            client.show_client_data()
             print("-------")
             print("Artículos:")
             for art in range(len(carrito)):
@@ -240,7 +293,31 @@ class Feria():
 
 
         elif op_pagar == 2:
-            return -1
+
+            if len(indices) != 0:
+                for i in range(len(indices)):
+                    indice = indices[i]-1                
+                    cantidad = cantidad_alimento[i]
+                    articulo = lista_productos[indice]
+                    articulo.set_cantidad(articulo.get_cantidad() + cantidad)
+            
+            if len(indices_bebidas) != 0:
+                for i in range(len(indices_bebidas)):
+                    indice = indices_bebidas[i]-1                
+                    cantidad = cantidad_bebida[i]
+                    tamanho = tamanho_list[i]
+                    articulo = lista_productos[indice]
+                    articulo.set_cantidad_bebida(index = tamanho, nueva_cantidad = articulo.get_cantidad()[tamanho-1] + cantidad)
+
+            return lista_productos
+         
+         
+
+
+
+                    
+
+
 
         
 
