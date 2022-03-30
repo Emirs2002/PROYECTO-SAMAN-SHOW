@@ -2,17 +2,38 @@ from tools import *
 
 from Taquilla import Taquilla
 from Feria import Feria 
+from Funciones_estadísticas import promedio_gasto, clientes_no_feria, top_clientes
 
 
 def main():
     
+    # LISTAS 
     lista_eventos = []
     lista_articulos = []
     clients_db = []
-    lista_asientos_ocupados = []
+
+    #CONTADOR MUSICAL
+    cont_saman_fest = 0
+    cont_keana = 0
+
+    #CONTADOR TEATRO
+    cont_fantasma= 0
+    cont_romeo = 0
+
+    #CONTADORES ALIMENTOS
+    cont_pizza = 0
+    cont_hamburguesa = 0
+    cont_dorito = 0
+    cont_platanito = 0
+
+    #CONTADORES BEBIDAS
+    cont_coca_cola = 0
+    cont_jugo = 0
+    cont_cerveza = 0
+
 
     lista_eventos = Taquilla(assign_event(lista_eventos))  #se asigna la información del API a sus respectivos objetos y se añaden a una lista vacía
-                                                            #La lista con la info de los eventos se transforma en objeto Cartelera
+                                                            #La lista con la info de los eventos/productos se transforma en objeto Taquilla y Feria
     
     lista_articulos = Feria(assign_producto(lista_articulos))
 
@@ -74,7 +95,7 @@ def main():
 
         if op == 2:       #MÓDULO 2: Venta de tickets
             clients_db = Taquilla(read_db("Clientes_tickets.txt", clients_db))
-            client_event = clients_db.comprar_tickets(lista_eventos, lista_asientos_ocupados)
+            client_event = clients_db.comprar_tickets(lista_eventos)
             
             
             if client_event == -1:    #Cliente declina el pago
@@ -100,7 +121,7 @@ def main():
                     filtro = check_op(1, 3, '''Ingrese por cuál filtro desea buscar:
                                     \n1.-Nombre
                                     \n2.-Tipo   
-                                    \n3.-Precio
+                                    \n3.-Precios
                                     \n-->''')
 
                     lista = Feria(lista_articulos.search_product(filtro))
@@ -134,17 +155,54 @@ def main():
             else:
                 clients_list = clients_db.get_food_db()
                 lista_articulos.show_products()
-                lista_articulos = lista_articulos.comprar_comida(id_confirmation, clients_list)
-
-                if type(lista_articulos) == list:
+                lista_articulos, cliente, pagado= lista_articulos.comprar_comida(id_confirmation, clients_list)
+                
+                if pagado == True:
                     lista_articulos = Feria(lista_articulos)
-                else:
-                    lista_articulos = []
-                    lista_articulos = Feria(assign_producto(lista_articulos))
 
+                    for client in range(len(clients_db.get_food_db())):
+                        c = clients_db.get_food_db()[client]
+                        if c.get_cedula() == id_confirmation:
+                            clients_db.get_food_db().pop(client)
+
+                    clients_db.get_food_db().append(cliente)           #retorna clientre para añadir el coste de la compra al atributo "dinero_pagado" 
+                    load_db("Clientes_tickets.txt", clients_db.get_food_db())
+
+                elif pagado == False:
+                    lista_articulos = Feria(lista_articulos)
 
         if op == 5:  # MÓDULO 5: Estadísticas
-            pass
+            
+            while True:
+                op5 = check_op(1,6, '''Ingrese el número de la opción que desea ejecutar:
+                            \n1.-Mostrar promedio de gasto de un cliente
+                            \n2.-Mostrar porcentaje de clientes que no compran en la feria
+                            \n3.-Mostrar top 3 clientes Saman Show
+                            \n4.-Mostrar top 3 eventos 
+                            \n5.-Mostrar top 5 productos más vendidos
+                            \n6.-Volver al menú
+                            \n==>''')
+                if op5 == 1:
+                    clients_db = read_db("Clientes_tickets.txt", clients_db)
+                    promedio_gasto(clients_db)
+
+                if op5 == 2:
+                    clients_db = read_db("Clientes_tickets.txt", clients_db)
+                    clientes_no_feria(clients_db)
+                
+                if op5 == 3:
+                    clients_db = read_db("Clientes_tickets.txt", clients_db)
+                    top_clientes(clients_db)
+
+                if op5 == 4:
+                    pass
+                    
+                if op5 == 5:
+                    pass
+                    
+                
+                if op5 == 6:
+                    break
         
         if op == 6:    # Reestablecer la información de la base de datos
             lista_articulos = []
