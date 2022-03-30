@@ -218,11 +218,11 @@ class Feria():
             cont = 0
             while cont < cantidad_producto:
                 if type(lista_productos[producto_comprado-1]) == Bebida:
-                    carrito.append(lista_productos[producto_comprado-1].get_nombre_producto())   # Añadir a la lista de productos a comprar
+                    carrito.append(lista_productos[producto_comprado-1])   # Añadir a la lista de productos a comprar
                     subtotal.append(float(lista_productos[producto_comprado-1].get_precio()[tamanho-1]))        # Añadir a la lista de subtotales de las bebidas
                     cont += 1
                 else:
-                    carrito.append(lista_productos[producto_comprado-1].get_nombre_producto())   # Añadir a la lista de productos a comprar
+                    carrito.append(lista_productos[producto_comprado-1])   # Añadir a la lista de productos a comprar
                     subtotal.append(float(lista_productos[producto_comprado-1].get_precio()))        # Añadir a la lista de subtotales
                     cont += 1
 
@@ -259,7 +259,7 @@ class Feria():
         
         op_pagar = check_op(1,2, "¿Desea proceder a pagar? \n1.-Sí \n2.-No\n==>")   
 
-        if op_pagar == 1:
+        if op_pagar == 1:    #Si desea proceder con el pago
             
 
                 ###### IMPRIMIR FACTURA  #####
@@ -277,7 +277,7 @@ class Feria():
             print("-------")
             print("Artículos:")
             for art in range(len(carrito)):
-                print(f"-> {carrito[art]}")
+                print(f"-> {carrito[art].get_nombre_producto()}")
                 print("")
             print("")
             print(f"*Subtotal: ${sum(subtotal)}")
@@ -289,7 +289,10 @@ class Feria():
             print("-------")
             print(f"*Monto total: ${costo_total}")
 
-            return lista_productos
+            client.set_dinero_pagado(float(client.get_dinero_pagado())+costo_total)
+            client.set_feria(True)
+
+            return lista_productos, client, True    
 
 
         elif op_pagar == 2:
@@ -309,7 +312,7 @@ class Feria():
                     articulo = lista_productos[indice]
                     articulo.set_cantidad_bebida(index = tamanho, nueva_cantidad = articulo.get_cantidad()[tamanho-1] + cantidad)
 
-            return lista_productos
+            return lista_productos, client, False
          
          
 
