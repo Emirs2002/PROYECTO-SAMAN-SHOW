@@ -263,7 +263,7 @@ class Taquilla():
                         subtotal = precios[1]*tickets
                         costo = (precios[1]*tickets)+iva
                         
-        client = Cliente(cedula = cedula, nombre = name, edad = age, dinero_pagado = costo)
+        client = Cliente(cedula = cedula, nombre = name, edad = age, dinero_pagado = costo, feria = False)
 
 
             ###### MOSTRAR FACTURA #######        #NOTE agregar descuento luego
