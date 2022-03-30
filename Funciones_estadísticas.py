@@ -1,45 +1,21 @@
 from tools import *
 
 
-### CALCULAR PROMEDIO DE GASTO DE UN CLIENTE ###
+### CALCULAR PROMEDIO DE GASTO DE CLIENTES ###
 
 def promedio_gasto(db):
-
+    print("")
+    print("*** Promedio de gasto de los clientes ***")
+    print("")
     for cliente in range(len(db)):
         client = db[cliente]
+        promedio = client.get_dinero_pagado()/2
         if client.get_feria() == True:
             print("")
             print(f"------------Cliente {cliente+1}------------")
             print("")
-            client.show_client_data()
-    
-    while True:
-        op = check_num("Ingrese la cédula del cliente:\n==> ")
-
-        inside_db = False
-        for cliente in range(len(db)):
-            client = db[cliente]
-            if client.get_cedula() == op:
-                inside_db = True
-                promedio = client.get_dinero_pagado()/2
-        
-        if inside_db == False:
-            print("")
-            print("Error. Cliente no ha podido ser encontrado, intente nuevamente.")
-            print("")
-
-        elif inside_db == True:
-            print("")
             print(f"Promedio de gasto de {client.get_nombre()} (C.I.{client.get_cedula()}): ${promedio}")
-            print("")
 
-        op_exit = check_op(1,2, "¿Desea ingresar otro cliente?: \n1.-Sí \n2.-No \n==>")
-
-        if op_exit == 1:
-            continue
-
-        if op_exit == 2:
-            break
 
 ### CALCULAR PORCENTAJE DE CLIENTES QUE NO COMPRARON EN LA FERIA ###
 
@@ -70,7 +46,7 @@ def top_clientes(db):
         if client.get_feria() == True:
             clientes_top.append(client)
 
-    clientes_top = quicksort(clientes_top)   #Ordenar lista por dinero gastado entre eventos y feria
+    clientes_top = quicksort_dinero_pagado(clientes_top)   #Ordenar lista por dinero gastado entre eventos y feria
     
     print("")
     print("********** ·TOP 3 CLIENTES SAMAN SHOW· **********")
@@ -87,4 +63,39 @@ def top_clientes(db):
             print(f"------------------------")
             print("")
 
+        ### TOP 3 EVENTOS ###
+    
+def top_eventos(carrito):
 
+    carrito = quicksort_ingreso(carrito)
+
+    print("")
+    print(" ********** TOP 3 EVENTOS **********")
+    print("")
+    if len(carrito) < 3:
+        for event in range(len(carrito)):
+            evento = carrito[event]
+            print("")
+            print(f"------------{event+1}------------")
+            print("")
+            print("")
+            print(f'''Nombre: {evento.get_nombre_evento()}
+                    \nIngreso total: ${evento.get_ingreso()}''')
+            print("")
+
+    if len(carrito) >= 3:
+        for event in range(3):
+            evento = carrito[event]
+            print("")
+            print(f"------------{event+1}------------")
+            print("")
+            print("")
+            print(f'''Nombre: {evento.get_nombre_evento()}
+                    \nIngreso total: ${evento.get_ingreso()}''')
+            print("")
+
+
+        ### MOSTRAR TOP 5 PRODUCTOS VENDIDOS ###
+        
+def top_productos(carrito):
+    pass
