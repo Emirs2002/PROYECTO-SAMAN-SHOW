@@ -133,12 +133,12 @@ class Taquilla():
             lista_performer = []
 
             op_performer = check_let('''Ingrese el nombre del actor o cantante:   
-                                \n==>''')  
+                                \n==>''').lower().capitalize()  
             for event in range(len(lista_events)):
                 evento = lista_events[event]
 
                 for performer in range(len(evento.get_cartel())):
-                    if evento.get_cartel()[performer] == op_performer:
+                    if evento.get_cartel()[performer].lower().capitalize() == op_performer:
                         lista_performer.append(evento)
 
             return lista_performer
@@ -149,20 +149,20 @@ class Taquilla():
             lista_nombre = []             
             
             op_nom = check_let('''Ingrese el nombre del evento que desea buscar:   
-                                \n==>''')  
+                                \n==>''').lower().capitalize()  
          
             for event in range(len(lista_events)): 
                 evento = lista_events[event]
-                if evento.get_nombre_evento() == op_nom:                    
+                if evento.get_nombre_evento().lower().capitalize() == op_nom:                    
                     lista_nombre.append(evento)  
             
             return lista_nombre
 
         ###########   MÓDULO 2 - COMPRA DE TICKETS ###########
 
-    def comprar_tickets(self, lista_events):
+    def comprar_tickets(self, lista_events):            #ANCHOR COMPRAR_TICKETS
         
-        name = check_let("Ingrese su nombre:\n-->")
+        name = check_let("Ingrese su nombre:\n-->").lower().capitalize()
         
         cedula = check_num("Ingrese su cédula:\n-->")
         
@@ -176,12 +176,12 @@ class Taquilla():
         inside_db = False
         while inside_db == False:
 
-            evento_escogido = check_let("Ingrese el nombre del evento que desea comprar:\n-->")
+            evento_escogido = check_let("Ingrese el nombre del evento que desea comprar:\n-->").lower().capitalize()
             
             lista = lista_events.get_db()
             for eve in range(len(lista)):
                 evento = lista[eve]
-                if evento.get_nombre_evento() == evento_escogido and evento.get_disponibilidad() == True:
+                if evento.get_nombre_evento().lower().capitalize() == evento_escogido and evento.get_disponibilidad() == True:
                     inside_db = True
                     print(f'''-Asientos:''') 
                     evento.show_asientos()
@@ -208,7 +208,7 @@ class Taquilla():
 
         cont = 0    #esto es para asegurar que la persona escoja el número de asientos según la cantidad de tickets
         
-                            ######SELECCIÓN DE ASIENTOS#####  #FIXME SOLO FUNCIONA PARA UN EVENTO
+                            ######SELECCIÓN DE ASIENTOS#####  
         
         asientos= []       #Lista de asientos del cliente                  
         while tickets > cont:      
@@ -245,15 +245,16 @@ class Taquilla():
                 if inside_asiento == False:   
                     print("El asiento está ocupado. Ingrese otro.")
 
-        ###### CALCULAR COSTOS ######
         
 
+        ###### CALCULAR COSTOS ######
+        
         for eve in range(len(lista)):
-                if lista[eve].get_nombre_evento() == evento_escogido:
+                if lista[eve].get_nombre_evento().lower().capitalize() == evento_escogido:
                     precios = lista[eve].get_precio()
                                 
 
-                    if tipo_asiento == 1:           #IF VAMPIRE == TRUE 
+                    if tipo_asiento == 1:          
                         iva = (precios[0]*tickets)*0.16        #Calcular el IVA para el precio general
                         subtotal = precios[0]*tickets
                         costo = (precios[0]*tickets)+iva
@@ -266,7 +267,7 @@ class Taquilla():
         client = Cliente(cedula = cedula, nombre = name, edad = age, dinero_pagado = costo, feria = False)
 
 
-            ###### MOSTRAR FACTURA #######        #NOTE agregar descuento luego
+            ###### MOSTRAR FACTURA #######        
        
         print("********* FACTURA ***********")
 
@@ -293,16 +294,27 @@ class Taquilla():
 
         if op == 1:
 
+            ## SE APLICAN CAMBIOS A LAS LISTAS DE ASIENTOS DEL EVENTO ## 
+
             for eve in range(len(lista)):
                 evento = lista[eve]
-                if evento.get_nombre_evento() == evento_escogido:
+                if evento.get_nombre_evento().lower().capitalize() == evento_escogido:
                     if tipo_asiento == 1:
                         evento.set_asientos_general(matriz_general)
                     else:
                         evento.set_asientos_vip(matriz_vip)
 
+            ## ADICIONAR EL COSTE TOTAL AL ATRIBUTO INGRESO DEL EVENTO ##
 
-            return client    #Si la respuesta es "sí" se devuelve el objeto con la información
+            for eve in range(len(lista)):
+                evento_obj = lista[eve]
+                if evento_obj.get_nombre_evento().lower().capitalize() == evento_escogido:
+                    evento_obj.set_ingreso(costo)
+                    break
+            
+            #  RETORNAR VALORES  #
+
+            return client, evento_obj, evento_escogido    #Si la respuesta es "sí" se devuelve el objeto con la información y los contadores
             
 
         if op == 2:

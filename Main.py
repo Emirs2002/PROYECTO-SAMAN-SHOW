@@ -1,8 +1,7 @@
 from tools import *
-
 from Taquilla import Taquilla
 from Feria import Feria 
-from Funciones_estadísticas import promedio_gasto, clientes_no_feria, top_clientes
+from Funciones_estadísticas import *
 
 
 def main():
@@ -11,14 +10,16 @@ def main():
     lista_eventos = []
     lista_articulos = []
     clients_db = []
+    carrito_productos = []
+    carrito_eventos = []
 
-    #CONTADOR MUSICAL
-    cont_saman_fest = 0
-    cont_keana = 0
+    #CONTADORES MUSICALES
+    cont_saman = 0
+    cont_guako = 0
 
-    #CONTADOR TEATRO
-    cont_fantasma= 0
+    #CONTADORES TEATRO
     cont_romeo = 0
+    cont_fantasma = 0
 
     #CONTADORES ALIMENTOS
     cont_pizza = 0
@@ -94,17 +95,30 @@ def main():
 
 
         if op == 2:       #MÓDULO 2: Venta de tickets
-            clients_db = Taquilla(read_db("Clientes_tickets.txt", clients_db))
-            client_event = clients_db.comprar_tickets(lista_eventos)
+
+            clients_db = Taquilla(read_db("clientes.txt", clients_db))
+            client_event, evento, evento_escogido= clients_db.comprar_tickets(lista_events = lista_eventos)
             
             
             if client_event == -1:    #Cliente declina el pago
                 continue
+
             else:                     #Cliente acepta realizar el pago
                 print("Su compra ha sido completada exitosamente.")
                 clients_db.get_db().append(client_event)
-                load_db("Clientes_tickets.txt", clients_db.get_db())
-
+                load_db("clientes.txt", clients_db.get_db())
+                
+                if len(carrito_eventos) == 0:
+                    carrito_eventos.append(evento)
+                else:
+                    for eve in range(len(carrito_eventos)):
+                        event = carrito_eventos[eve]
+                        if event.get_nombre_evento().lower().capitalize() == evento_escogido:
+                            carrito_eventos.pop(eve)
+                            break
+                
+                    carrito_eventos.append(evento)
+                
 
         if op == 3:      #MÓDULO 3: Gestión de artículos de la feria
             while True:   
@@ -144,7 +158,7 @@ def main():
 
         if op == 4:      # MÓDULO 4: Compra de comida
 
-            clients_db = Feria(read_db("Clientes_tickets.txt", clients_db))
+            clients_db = Feria(read_db("clientes.txt", clients_db))
             id_confirmation = clients_db.check_cedula()
 
             if id_confirmation == -1:
@@ -166,7 +180,7 @@ def main():
                             clients_db.get_food_db().pop(client)
 
                     clients_db.get_food_db().append(cliente)           #retorna clientre para añadir el coste de la compra al atributo "dinero_pagado" 
-                    load_db("Clientes_tickets.txt", clients_db.get_food_db())
+                    load_db("clientes.txt", clients_db.get_food_db())
 
                 elif pagado == False:
                     lista_articulos = Feria(lista_articulos)
@@ -175,7 +189,7 @@ def main():
             
             while True:
                 op5 = check_op(1,6, '''Ingrese el número de la opción que desea ejecutar:
-                            \n1.-Mostrar promedio de gasto de un cliente
+                            \n1.-Mostrar promedio de gasto de cliente
                             \n2.-Mostrar porcentaje de clientes que no compran en la feria
                             \n3.-Mostrar top 3 clientes Saman Show
                             \n4.-Mostrar top 3 eventos 
@@ -183,19 +197,19 @@ def main():
                             \n6.-Volver al menú
                             \n==>''')
                 if op5 == 1:
-                    clients_db = read_db("Clientes_tickets.txt", clients_db)
+                    clients_db = read_db("clientes.txt", clients_db)
                     promedio_gasto(clients_db)
 
                 if op5 == 2:
-                    clients_db = read_db("Clientes_tickets.txt", clients_db)
+                    clients_db = read_db("clientes.txt", clients_db)
                     clientes_no_feria(clients_db)
                 
                 if op5 == 3:
-                    clients_db = read_db("Clientes_tickets.txt", clients_db)
+                    clients_db = read_db("clientes.txt", clients_db)
                     top_clientes(clients_db)
 
                 if op5 == 4:
-                    pass
+                    top_eventos(carrito_eventos)
                     
                 if op5 == 5:
                     pass
@@ -207,10 +221,14 @@ def main():
         if op == 6:    # Reestablecer la información de la base de datos
             lista_articulos = []
             lista_eventos = []
+            clients_db = []
 
             lista_eventos = Taquilla(assign_event(lista_eventos))                                            
     
             lista_articulos = Feria(assign_producto(lista_articulos))
+
+            load_db("clientes.txt", clients_db)
+
             print("")
             print("¡Datos reestablecidos!")
             print("")
