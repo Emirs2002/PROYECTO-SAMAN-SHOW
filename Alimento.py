@@ -1,8 +1,8 @@
 from Producto import Producto
 
 class Alimento(Producto):
-    def __init__(self, nombre_producto, clasificacion, precio, cantidad, presentacion):
-        super().__init__(nombre_producto, clasificacion, precio, cantidad)
+    def __init__(self, nombre_producto, clasificacion, precio, cantidad, vendido, presentacion):
+        super().__init__(nombre_producto, clasificacion, precio, cantidad, vendido)
 
         self.__presentacion = presentacion
 

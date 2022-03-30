@@ -3,11 +3,11 @@ from Bebida import Bebida
 from Alimento import Alimento
 
 class Feria():
-    def __init__(self, food_db):
-        self.__food_db = food_db
+    def __init__(self, db):
+        self.__db = db
 
-    def get_food_db(self):
-        return self.__food_db
+    def get_db(self):
+        return self.__db
 
 
 
@@ -17,7 +17,7 @@ class Feria():
 
     def show_products(self):
 
-        lista_products = self.__food_db
+        lista_products = self.__db
 
         print("")
         print("    ------------------ ARTÍCULOS -------------------     ")
@@ -39,7 +39,7 @@ class Feria():
 
     def delete_product(self):
 
-        lista_productos = self.__food_db
+        lista_productos = self.__db
         
         producto_eliminar = check_num("Ingrese el número del producto que desea eliminar: \n==>")
         producto_eliminar = int(producto_eliminar)
@@ -54,17 +54,17 @@ class Feria():
 
     def search_product(self, num):    #nombre, tipo, o rango de precio
         
-        lista_productos = self.__food_db
+        lista_productos = self.__db
 
         #### N O M B R E ####
 
         if num == 1:
             lista_nombre = [] 
-            op_nom = check_let("Ingrese el nombre del producto: \n==>")            
+            op_nom = check_let("Ingrese el nombre del producto: \n==>").lower().capitalize()            
             
             for art in range(len(lista_productos)):
                 articulo = lista_productos[art]
-                if articulo.get_nombre_producto() == op_nom:
+                if articulo.get_nombre_producto().lower().capitalize()   == op_nom:
                     lista_nombre.append(articulo)
             
             return lista_nombre
@@ -135,7 +135,7 @@ class Feria():
     ### VERIFICAR QUE EL CLIENTE HAYA COMPRADO UN TICKET ### 
 
     def check_cedula(self):
-        clientes_list = self.__food_db
+        clientes_list = self.__db
 
         cedula = check_num("Ingrese su cédula: \n==>")
 
@@ -156,9 +156,9 @@ class Feria():
     #### COMPRAR PRODUCTOS ####
 
 
-    def comprar_comida(self, cedula, client_db):    #NOTE COMENTAR TODO
+    def comprar_comida(self, cedula, client_db, carrito_productos):    #NOTE COMENTAR TODO
         
-        lista_productos = self.__food_db 
+        lista_productos = self.__db 
         
         carrito = []
         subtotal = []
@@ -292,7 +292,16 @@ class Feria():
             client.set_dinero_pagado(float(client.get_dinero_pagado())+costo_total)
             client.set_feria(True)
 
-            return lista_productos, client, True    
+
+            ## VACIAR CARRITO EN CARRITO_PRODUCTOS ##
+
+            for art in range(len(carrito)):
+                producto = carrito[art] 
+                carrito_productos.append(producto.get_nombre_producto())            
+
+            ## RETORNAR VALORES ##
+
+            return lista_productos, client, True, carrito_productos  
 
 
         elif op_pagar == 2:
@@ -312,7 +321,7 @@ class Feria():
                     articulo = lista_productos[indice]
                     articulo.set_cantidad_bebida(index = tamanho, nueva_cantidad = articulo.get_cantidad()[tamanho-1] + cantidad)
 
-            return lista_productos, client, False
+            return lista_productos, client, False, carrito_productos
          
          
 

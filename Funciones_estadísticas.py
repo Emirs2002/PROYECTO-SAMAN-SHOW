@@ -1,5 +1,6 @@
 from tools import *
 
+        #### M Ó D U L O  5 ####
 
 ### CALCULAR PROMEDIO DE GASTO DE CLIENTES ###
 
@@ -96,6 +97,79 @@ def top_eventos(carrito):
 
 
         ### MOSTRAR TOP 5 PRODUCTOS VENDIDOS ###
+
+def top_productos(carrito, lista):
+    
+    #CONTADORES ALIMENTOS
+    cont_pizza = 0
+    cont_hamburguesa = 0
+    cont_dorito = 0
+    cont_platanito = 0
+
+    #CONTADORES BEBIDAS
+    cont_coca_cola = 0
+    cont_jugo = 0
+    cont_cerveza = 0
+
+
+    cont_pizza = carrito.count("Pizza")
+    cont_hamburguesa = carrito.count("Hamburguesa")
+    cont_dorito = carrito.count("Doritos")
+    cont_platanito = carrito.count("Platanitos")
+
+    cont_coca_cola = carrito.count("Coca Cola")
+    cont_jugo = carrito.count("Jugo")
+    cont_cerveza = carrito.count("Cerveza")
+    
+    new_list = []
+    for art in range(len(lista)):
+        producto = lista[art]
+        if producto.get_nombre_producto() == "Pizza":
+            producto.set_vendido(cont_pizza)
+            new_list.append(producto)
+
+        if producto.get_nombre_producto() == "Hamburguesa":
+            producto.set_vendido(cont_hamburguesa)
+            new_list.append(producto)
+
+        if producto.get_nombre_producto() == "Doritos":
+            producto.set_vendido(cont_dorito)
+            new_list.append(producto)
+
+        if producto.get_nombre_producto() == "Platanitos":
+            producto.set_vendido(cont_platanito)
+            new_list.append(producto)
+
+        if producto.get_nombre_producto() == "Coca Cola":
+            producto.set_vendido(cont_coca_cola)
+            new_list.append(producto)
+
+        if producto.get_nombre_producto() == "Cerveza":
+            producto.set_vendido(cont_cerveza)
+            new_list.append(producto)
         
-def top_productos(carrito):
-    pass
+        if producto.get_nombre_producto() == "Jugo":
+            producto.set_vendido(cont_jugo)
+            new_list.append(producto)
+
+
+    new_list = quicksort_vendido(new_list)    #Ordenar nueva lista con cantidades actualizadas por dichas cantidades
+
+        ## IMPRIMIR NEW_LIST DE MAYOR A MENOR ##
+
+    print("")
+    print("--------------- TOP 5 PRODUCTOS VENDIDOS ---------------")
+    print("")
+    for art in range(5):
+        producto = new_list[art]
+        print("")
+        print(f"--------- {art+1} ---------")
+        print("")
+        print(f"Nombre: {producto.get_nombre_producto()} \nCantidad: {producto.get_vendido()}")
+
+
+
+
+    
+    
+

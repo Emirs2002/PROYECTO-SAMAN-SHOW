@@ -230,7 +230,7 @@ class Taquilla():
                     
         
             elif tipo_asiento == 2:   
-                asiento = input('''Ingrese el asiento que desea (Ejemplo: V1. Ingresar 'V1'):
+                asiento = input('''Ingrese el asiento que desea (Ejemplo: A1. Ingresar 'A1'):
                                 \n==>''')
 
                 inside_asiento = False

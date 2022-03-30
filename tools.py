@@ -155,12 +155,12 @@ def assign_producto(lista_products):
 
         for art in range(len(db["food_fair_inventory"])):
             if db["food_fair_inventory"][art]["type"] == 1:
-                alimento = Alimento(nombre_producto=db["food_fair_inventory"][art]["name"], clasificacion=db["food_fair_inventory"][art]["type"], precio=db["food_fair_inventory"][art]["price"], presentacion=db["food_fair_inventory"][art]["presentation"], cantidad = db["food_fair_inventory"][art]["amount"])
+                alimento = Alimento(nombre_producto=db["food_fair_inventory"][art]["name"], clasificacion=db["food_fair_inventory"][art]["type"], precio=db["food_fair_inventory"][art]["price"], presentacion=db["food_fair_inventory"][art]["presentation"], cantidad = db["food_fair_inventory"][art]["amount"], vendido = 0)
                 lista_products.append(alimento)
             elif db["food_fair_inventory"][art]["type"] == 2:
                 cantidad = int(db["food_fair_inventory"][art]["amount"])//3
                 lista_cantidades = [cantidad, cantidad, cantidad]
-                bebida = Bebida(nombre_producto=db["food_fair_inventory"][art]["name"], clasificacion=db["food_fair_inventory"][art]["type"], precio=db["food_fair_inventory"][art]["price"], cantidad = lista_cantidades)
+                bebida = Bebida(nombre_producto=db["food_fair_inventory"][art]["name"], clasificacion=db["food_fair_inventory"][art]["type"], precio=db["food_fair_inventory"][art]["price"], cantidad = lista_cantidades, vendido=0)
                 lista_products.append(bebida)
         
         return lista_products
@@ -217,4 +217,21 @@ def quicksort_ingreso(lista):
             mayores.append(lista[x])
     return quicksort_ingreso(mayores) + [objeto] + quicksort_ingreso(menores)
 
+### ORDENAR LISTA DE OBJETOS POR CANTIDAD POR LA QUE SE VENDIERON ###
+
+def quicksort_vendido(lista):
+
+    if len(lista) <= 1:
+        return lista
+    
+    objeto = lista[0]
+    pivote = objeto.get_vendido()
+    menores = []
+    mayores = []
+    for x in range(1, len(lista)):
+        if lista[x].get_vendido() < pivote:
+            menores.append(lista[x])
+        else:
+            mayores.append(lista[x])
+    return quicksort_vendido(mayores) + [objeto] + quicksort_vendido(menores)
     

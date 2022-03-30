@@ -13,25 +13,6 @@ def main():
     carrito_productos = []
     carrito_eventos = []
 
-    #CONTADORES MUSICALES
-    cont_saman = 0
-    cont_guako = 0
-
-    #CONTADORES TEATRO
-    cont_romeo = 0
-    cont_fantasma = 0
-
-    #CONTADORES ALIMENTOS
-    cont_pizza = 0
-    cont_hamburguesa = 0
-    cont_dorito = 0
-    cont_platanito = 0
-
-    #CONTADORES BEBIDAS
-    cont_coca_cola = 0
-    cont_jugo = 0
-    cont_cerveza = 0
-
 
     lista_eventos = Taquilla(assign_event(lista_eventos))  #se asigna la información del API a sus respectivos objetos y se añaden a una lista vacía
                                                             #La lista con la info de los eventos/productos se transforma en objeto Taquilla y Feria
@@ -140,7 +121,7 @@ def main():
 
                     lista = Feria(lista_articulos.search_product(filtro))
 
-                    if lista.get_food_db() == []:
+                    if lista.get_db() == []:
                         print("")
                         print("***  Error: la información que ha ingresado no se encuentra en la base de datos, intente nuevamente  ***")
                         print("")  
@@ -167,20 +148,21 @@ def main():
                 print("")
 
             else:
-                clients_list = clients_db.get_food_db()
+                clients_list = clients_db.get_db()
                 lista_articulos.show_products()
-                lista_articulos, cliente, pagado= lista_articulos.comprar_comida(id_confirmation, clients_list)
+                lista_articulos, cliente, pagado, carrito_productos= lista_articulos.comprar_comida(id_confirmation, clients_list, carrito_productos)
                 
                 if pagado == True:
                     lista_articulos = Feria(lista_articulos)
 
-                    for client in range(len(clients_db.get_food_db())):
-                        c = clients_db.get_food_db()[client]
+                    for client in range(len(clients_db.get_db())):
+                        c = clients_db.get_db()[client]
                         if c.get_cedula() == id_confirmation:
-                            clients_db.get_food_db().pop(client)
+                            clients_db.get_db().pop(client)
+                            break
 
-                    clients_db.get_food_db().append(cliente)           #retorna clientre para añadir el coste de la compra al atributo "dinero_pagado" 
-                    load_db("clientes.txt", clients_db.get_food_db())
+                    clients_db.get_db().append(cliente)           #retorna clientre para añadir el coste de la compra al atributo "dinero_pagado" 
+                    load_db("clientes.txt", clients_db.get_db())
 
                 elif pagado == False:
                     lista_articulos = Feria(lista_articulos)
@@ -212,8 +194,7 @@ def main():
                     top_eventos(carrito_eventos)
                     
                 if op5 == 5:
-                    pass
-                    
+                    top_productos(carrito_productos, lista_articulos.get_db())
                 
                 if op5 == 6:
                     break
