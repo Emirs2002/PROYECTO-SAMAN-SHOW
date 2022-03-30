@@ -90,10 +90,10 @@ def assign_event(lista_events):
             layout = db["events"][event]["layout"]    #ITERAR EN EL DICCIONARIO LAYOUT
             for tipo, asiento in layout.items():
                 if tipo == "general":
-                    matriz_general = matrix_general(asiento[0], asiento[1])   
+                    matriz_general = matrix(asiento[0], asiento[1])   
                     
                 elif tipo == "vip":
-                    matriz_vip = matrix_vip(asiento[0], asiento[1])  
+                    matriz_vip = matrix(asiento[0], asiento[1])  
 
             if db["events"][event]["type"] == 1:       
                 musical_obj = Musical(nombre_evento = db["events"][event]["title"], cartel = db["events"][event]["cartel"], asientos_general= matriz_general , asientos_vip= matriz_vip, fecha = db["events"][event]["date"], num_bandas = db["events"][event]["bands"], precio = db["events"][event]["prices"], tipo = db["events"][event]["type"], disponibilidad=True)
@@ -107,27 +107,12 @@ def assign_event(lista_events):
 
 ### Hacer matrices de filas y columnas especificadas por el usuario ### 
 
-### Matriz general ###
-def matrix_general(filas, columnas):
+def matrix(filas, columnas):
     
 	abc = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 	matrix = ['A'] * filas
 	for fila in range(filas):
 		matrix[fila] = [f'{abc[fila]}'] * columnas 
-	for columna in range(filas):
-		n = matrix[columna]
-		for fila in range(columnas):
-			n[fila] += str(fila)
-
-	return matrix
-
-### Matriz vip ###
-
-def matrix_vip(filas, columnas):
-    
-	matrix = ['V'] * filas
-	for fila in range (filas):
-		matrix[fila] = ['V'] * columnas
 	for columna in range(filas):
 		n = matrix[columna]
 		for fila in range(columnas):
@@ -163,6 +148,7 @@ def check_vampire(num):
 def assign_producto(lista_products):
     
     url = "https://raw.githubusercontent.com/Algoritmos-y-Programacion/api_saman_show/main/api.json"
+    
     response = requests.get(url)
 
     if response.status_code == 200:
@@ -180,6 +166,8 @@ def assign_producto(lista_products):
         
         return lista_products
 
+#### VALIDAR QUE UN NÚMERO SEA NARCISISTA ####
+
 def check_narcissistic(num):
     
     num = str(num)
@@ -194,4 +182,22 @@ def check_narcissistic(num):
     else:
         return False
         
+### ORDENAR LISTA DE OBJETOS POR PRECIO ###
 
+def quicksort(lista):
+
+    if len(lista) <= 1:
+        return lista
+    
+    objeto = lista[0]
+    pivote = objeto.get_dinero_pagado()
+    menores = []
+    mayores = []
+    for x in range(1, len(lista)):
+        if lista[x].get_dinero_pagado() < pivote:
+            menores.append(lista[x])
+        else:
+            mayores.append(lista[x])
+    return quicksort(mayores) + [objeto] + quicksort(menores)
+
+    
