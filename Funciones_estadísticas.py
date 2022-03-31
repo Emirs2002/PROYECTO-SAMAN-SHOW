@@ -60,7 +60,7 @@ def top_clientes(db):
                 print(f"------------{cliente+1}------------")
                 print("")
                 client.show_client_data()
-                print("$"+client.get_dinero_pagado())
+                print("$",client.get_dinero_pagado())
 
                 print("")
                 print(f"------------------------")
@@ -74,7 +74,7 @@ def top_clientes(db):
                 print(f"------------{cliente+1}------------")
                 print("")
                 client.show_client_data()
-                print("$"+client.get_dinero_pagado())
+                print("$",client.get_dinero_pagado())
 
                 print("")
                 print(f"------------------------")

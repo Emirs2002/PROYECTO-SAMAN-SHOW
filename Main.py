@@ -1,3 +1,4 @@
+from os import read
 from tools import *
 from Taquilla import Taquilla
 from Feria import Feria 
@@ -7,28 +8,18 @@ from Funciones_estadísticas import *
 def main():
     
     # LISTAS 
-    lista_eventos = []
-    lista_articulos = []
     clients_db = []
     carrito_productos = []
     carrito_eventos = []
-
-
-    lista_eventos = Taquilla(assign_event(lista_eventos))  #se asigna la información del API a sus respectivos objetos y se añaden a una lista vacía
-                                                            #La lista con la info de los eventos/productos se transforma en objeto Taquilla y Feria
-    
-    lista_articulos = Feria(assign_producto(lista_articulos))
-
-    
+ 
     while True:
-
-        #lista_asientos_ocupados = read_db("asientos_ocupados.txt", lista_asientos_ocupados)
 
         print("")
         print("***BIENVENIDO A SAMAN SHOW***")
         print("")
                               #Menú principal
-        op = check_op(1, 7, '''Ingrese la opción que desea realizar:
+        op = check_op(0, 7, '''Ingrese la opción que desea realizar:
+            \n0.- Cargar Datos
             \n1.- Gestión eventos
             \n2.- Comprar tickets
             \n3.- Gestión Feria
@@ -37,6 +28,15 @@ def main():
             \n6.- Reestablecer base de datos
             \n7.- Salir
             \n==>''') 
+        if op == 0:
+            lista_articulos = []
+            lista_eventos = []
+
+            lista_eventos = assign_event(lista_eventos)  #se asigna la información del API a sus respectivos objetos y se añaden a una lista vacía
+            load_db("eventos_db.txt", lista_eventos)                                
+    
+            lista_articulos = assign_producto(lista_articulos)
+            load_db("productos_db.txt", lista_articulos)
 
         if op == 1:   #MÓDULO 1: Opción "ver eventos" abre un submenú
             while True:   
@@ -48,6 +48,8 @@ def main():
                             \n-->''')                            
                     
                     #SUBMENÚ DE VER EVENTOS
+                lista_eventos = []
+                lista_eventos = Taquilla(read_db("eventos_db.txt", lista_eventos))
 
                 if op1 == 1:
                     lista_eventos.show_events()          #Muestra todos los eventos con su respectiva información
@@ -76,9 +78,10 @@ def main():
 
 
         if op == 2:       #MÓDULO 2: Venta de tickets
-
+            lista_eventos = []
+            lista_eventos = Taquilla(read_db("eventos_db.txt", lista_eventos))
             clients_db = Taquilla(read_db("clientes.txt", clients_db))    #se carga la lista de clientes
-            client_event, evento, evento_escogido= clients_db.comprar_tickets(lista_events = lista_eventos)    
+            client_event, evento, evento_escogido, lista_eventos= clients_db.comprar_tickets(lista_events = lista_eventos)    
             
             
             if client_event == -1:    #Cliente declina el pago
@@ -89,6 +92,8 @@ def main():
                 clients_db.get_db().append(client_event)
                 load_db("clientes.txt", clients_db.get_db())      #Se añade cliente a la lista de clientes
                 
+                load_db("eventos_db.txt", lista_eventos)
+
                 if len(carrito_eventos) == 0:
                     carrito_eventos.append(evento)
                 else:
@@ -101,14 +106,17 @@ def main():
                     carrito_eventos.append(evento)          #Lista de eventos para el módulo 5
                 
 
-        if op == 3:      #MÓDULO 3: Gestión de artículos de la feria
+        if op == 3:      #  MÓDULO 3: Gestión de artículos de la feria
             while True:   
                 op3 = check_op(1, 4, '''Ingrese la opción que desea realizar:     
                             \n1.-Ver todos los productos
                             \n2.-Buscar productos por filtro
                             \n3.-Eliminar producto                             
                             \n4.-Volver al menú
-                            \n-->''')          
+                            \n-->''') 
+                lista_articulos = []
+                lista_articulos = Feria(read_db("productos_db.txt", lista_articulos))      
+                
                 if op3 == 1:
                     lista_articulos.show_products()     #Mostrar todos los productos con su respectiva información
                 
@@ -131,7 +139,8 @@ def main():
 
                 if op3 == 3:
                     lista_articulos.show_products()
-                    lista_articulos = Feria(lista_articulos.delete_product())           #Se borra un producto de la lista
+                    lista_articulos = lista_articulos.delete_product()           #Se borra un producto de la lista
+                    load_db("productos_db.txt", lista_articulos)
 
                 if op3 == 4:                  
                     break
@@ -149,11 +158,14 @@ def main():
 
             else:           #de haber comprado se muestran los productos y se procede a comprar
                 clients_list = clients_db.get_db()
+                lista_articulos = []
+                lista_articulos = Feria(read_db("productos_db.txt", lista_articulos))
                 lista_articulos.show_products()
                 lista_articulos, cliente, pagado, carrito_productos= lista_articulos.comprar_comida(id_confirmation, clients_list, carrito_productos)
                 
                 if pagado == True:          #si acepta realizar el pago se devuelve pagado como True y se actualiza la lista de productos
-                    lista_articulos = Feria(lista_articulos)
+                    
+                    load_db("productos_db.txt", lista_articulos) 
 
                     for client in range(len(clients_db.get_db())):      
                         c = clients_db.get_db()[client]
@@ -164,8 +176,10 @@ def main():
                     clients_db.get_db().append(cliente)           #retorna clientre para añadir el coste de la compra al atributo "dinero_pagado" 
                     load_db("clientes.txt", clients_db.get_db())
 
-                elif pagado == False:
-                    lista_articulos = Feria(lista_articulos)            #de no realizar el pago se devuelve la lista sin modificar
+                else:
+                    print("")
+                    print("**** El pago ha sido cancelado con éxito ****")
+                    print("")
 
         if op == 5:  # MÓDULO 5: Estadísticas
             
@@ -194,19 +208,23 @@ def main():
                     top_eventos(carrito_eventos)
                     
                 if op5 == 5:
-                    top_productos(carrito_productos, lista_articulos.get_db())
+                    lista_articulos = []
+                    lista_articulos = read_db("productos_db.txt", lista_articulos)
+                    top_productos(carrito_productos, lista_articulos)
                 
                 if op5 == 6:
                     break
-        
+
         if op == 6:    # Reestablecer la información de la base de datos
             lista_articulos = []
             lista_eventos = []
             clients_db = []
 
-            lista_eventos = Taquilla(assign_event(lista_eventos))                                            
+            lista_eventos = assign_event(lista_eventos)
+            load_db("eventos_db.txt", lista_eventos)                                            
     
-            lista_articulos = Feria(assign_producto(lista_articulos))
+            lista_articulos = assign_producto(lista_articulos)
+            load_db("productos_db.txt", lista_articulos)
 
             load_db("clientes.txt", clients_db)
 

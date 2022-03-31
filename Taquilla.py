@@ -317,7 +317,7 @@ class Taquilla():
             
             #  RETORNAR VALORES  #
 
-            return client, evento_obj, evento_escogido    #Si la respuesta es "sí" se devuelve el objeto con la información y los contadores
+            return client, evento_obj, evento_escogido, lista    #Si la respuesta es "sí" se devuelve el objeto con la información y los contadores
             
 
         if op == 2:
