@@ -11,13 +11,13 @@ class Feria():
 
 
 
-    #######    MÓDULO 3   #######               #NOTE COMENTAR TODO EL CÓDIGO
+    #######    MÓDULO 3   #######               
 
 
 
-    def show_products(self):
+    def show_products(self):        #Mostrar todos los productos con su respectiva información
 
-        lista_products = self.__db
+        lista_products = self.__db      #se toma el valor de la lista con los productos
 
         print("")
         print("    ------------------ ARTÍCULOS -------------------     ")
@@ -44,7 +44,7 @@ class Feria():
         producto_eliminar = check_num("Ingrese el número del producto que desea eliminar: \n==>")
         producto_eliminar = int(producto_eliminar)
 
-        lista_productos.pop(producto_eliminar-1)
+        lista_productos.pop(producto_eliminar-1)    #se resta 1, ya que en la lista los productos aparecen con un número que resulta de sumar el índice+1
 
         return lista_productos
    
@@ -52,7 +52,7 @@ class Feria():
     ######### BUSCAR PRODUCTOS POR FILTRO ###########
 
 
-    def search_product(self, num):    #nombre, tipo, o rango de precio
+    def search_product(self, num):    
         
         lista_productos = self.__db
 
@@ -64,10 +64,10 @@ class Feria():
             
             for art in range(len(lista_productos)):
                 articulo = lista_productos[art]
-                if articulo.get_nombre_producto().lower().capitalize()   == op_nom:
+                if articulo.get_nombre_producto().lower().capitalize()   == op_nom: #se busca el objeto por el nombre, si se encuentra se añade a la lista vacía
                     lista_nombre.append(articulo)
             
-            return lista_nombre
+            return lista_nombre     #de encontrarse, devuelve la lista con el objeto, sino devuelve la lista vacía
                    
         #### T I P O ####
 
@@ -87,7 +87,7 @@ class Feria():
             return lista_tipo
 
         #### P R E C I O S ####
-        lista_precios = []                #NOTE COMENTAR TODO
+        lista_precios = []               
         if num == 3:       
             op_precio = check_op(1,3,'''Seleccione el rango de precios que desea consultar: 
                     \n1.-Menor a $5 
@@ -99,17 +99,17 @@ class Feria():
                 articulo = lista_productos[art] 
                 if op_precio == 1:
                     if articulo.get_clasificacion() == 1:
-                        if float(articulo.get_precio()) < 5:
+                        if float(articulo.get_precio()) < 5:        #añade a la lista los objetos que tengan al menos un precio menor a $5
                             lista_precios.append(articulo)
                     else:
                         for precio in range(len(articulo.get_precio())):
-                            if float(articulo.get_precio()[precio]) < 5:
+                            if float(articulo.get_precio()[precio]) < 5:    
                                 lista_precios.append(articulo)
                                 break
 
                 if op_precio == 2:
                     if articulo.get_clasificacion() == 1:
-                        if float(articulo.get_precio()) > 5 and float(articulo.get_precio()) < 10:
+                        if float(articulo.get_precio()) > 5 and float(articulo.get_precio()) < 10:  #añade a la lista los objetos que tengan al menos un precio entre $5 y $10
                             lista_precios.append(articulo)
                     else:
                         for precio in range(len(articulo.get_precio())):
@@ -119,7 +119,7 @@ class Feria():
 
                 if op_precio == 3:
                     if articulo.get_clasificacion() == 1:
-                        if float(articulo.get_precio()) > 10:
+                        if float(articulo.get_precio()) > 10:       #añade a la lista los objetos que tengan al menos un precio mayor a $10
                             lista_precios.append(articulo)
                     else:
                         for precio in range(len(articulo.get_precio())):
@@ -129,19 +129,20 @@ class Feria():
 
             return lista_precios
 
+
         #######    MÓDULO 4   #######
 
 
     ### VERIFICAR QUE EL CLIENTE HAYA COMPRADO UN TICKET ### 
 
     def check_cedula(self):
-        clientes_list = self.__db
+        clientes_list = self.__db       #se carga la información de la lista de clientes
 
         cedula = check_num("Ingrese su cédula: \n==>")
 
         cedula_inside = False
         for client in range(len(clientes_list)):
-            if clientes_list[client].get_cedula() == cedula:
+            if clientes_list[client].get_cedula() == cedula:    #se verifica si hay algún cliente con esa cédula
                 cedula_inside = True
                 break
             else:
@@ -156,24 +157,27 @@ class Feria():
     #### COMPRAR PRODUCTOS ####
 
 
-    def comprar_comida(self, cedula, client_db, carrito_productos):    #NOTE COMENTAR TODO
+    def comprar_comida(self, cedula, client_db, carrito_productos):    
         
         lista_productos = self.__db 
         
+        #LISTAS PARA GUARDAR LA INFORMACIÓN DE LOS PRODUCTOS ELEGIDOS 
         carrito = []
-        subtotal = []
+        subtotal = []           #En caso de que el cliente decline el pago se utilizan para reestablecer el inventario
         indices = []
         indices_bebidas = []
         cantidad_alimento = []
         cantidad_bebida = []
         tamanho_list = []
+
+        #CONTADOR
         costo = 0
+
         while True:
 
             producto_comprado = check_num("Introduzca el número del producto que desea comprar: ")
             producto_comprado = int(producto_comprado)
 
-            
 
             if type(lista_productos[producto_comprado-1]) == Alimento:
 
@@ -186,11 +190,11 @@ class Feria():
 
                 alimento = lista_productos[producto_comprado-1]
                 
-                nueva_cantidad = alimento.delete_inventory(cantidad_producto)
+                nueva_cantidad = alimento.delete_inventory(cantidad_producto)   #se resta la cantidad ingresada por el cliente del inventario de ese producto
 
                 alimento.set_cantidad(nueva_cantidad)
 
-                costo += (float(alimento.get_precio()))*cantidad_producto
+                costo += (float(alimento.get_precio()))*cantidad_producto       #se suma al costo total
 
             if type(lista_productos[producto_comprado-1]) == Bebida:
                 
@@ -208,9 +212,9 @@ class Feria():
 
                 bebida = lista_productos[producto_comprado-1]
 
-                nueva_cantidad = bebida.delete_inventory_bebida(tamanho, cantidad_producto)
+                nueva_cantidad = bebida.delete_inventory_bebida(tamanho, cantidad_producto) #se resta la cantidad ingresada por el cliente del inventario de ese producto de acuerdo al tamaño
 
-                bebida.set_cantidad_bebida(tamanho, nueva_cantidad)
+                bebida.set_cantidad_bebida(tamanho, nueva_cantidad) 
 
                 costo += (float(bebida.get_precio()[tamanho-1]))*cantidad_producto
 
@@ -276,7 +280,7 @@ class Feria():
             client.show_client_data()
             print("-------")
             print("Artículos:")
-            for art in range(len(carrito)):
+            for art in range(len(carrito)):         #se muestran los productos comprados
                 print(f"-> {carrito[art].get_nombre_producto()}")
                 print("")
             print("")
@@ -289,13 +293,13 @@ class Feria():
             print("-------")
             print(f"*Monto total: ${costo_total}")
 
-            client.set_dinero_pagado(float(client.get_dinero_pagado())+costo_total)
-            client.set_feria(True)
+            client.set_dinero_pagado(float(client.get_dinero_pagado())+costo_total)     #se suma el dinero pagado en feria al dinero pagado en taquilla
+            client.set_feria(True)      #cliente ha comprado en feria
 
 
-            ## VACIAR CARRITO EN CARRITO_PRODUCTOS ##
+            ## VACIAR CARRITO EN CARRITO_PRODUCTOS ## (para módulo 5)
 
-            for art in range(len(carrito)):
+            for art in range(len(carrito)):     
                 producto = carrito[art] 
                 carrito_productos.append(producto.get_nombre_producto())            
 
@@ -304,8 +308,9 @@ class Feria():
             return lista_productos, client, True, carrito_productos  
 
 
-        elif op_pagar == 2:
-
+        elif op_pagar == 2:     #Cliente declina el pago
+            
+            #SE REESTABLECE EL INVENTARIO DE LOS ALIMENTOS
             if len(indices) != 0:
                 for i in range(len(indices)):
                     indice = indices[i]-1                
@@ -313,6 +318,8 @@ class Feria():
                     articulo = lista_productos[indice]
                     articulo.set_cantidad(articulo.get_cantidad() + cantidad)
             
+            #SE REESTABLECE EL INVENTARIO DE LAS BEBIDAS
+
             if len(indices_bebidas) != 0:
                 for i in range(len(indices_bebidas)):
                     indice = indices_bebidas[i]-1                

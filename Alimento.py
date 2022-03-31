@@ -15,7 +15,7 @@ class Alimento(Producto):
                 \n-Cantidad: {self.get_cantidad()}
                 \n-Precio: ${self.get_precio()}''')
         print("")
-        print("-Presentación: ", end="")
+        print("-Presentación: ", end="")        
         if self.get_presentacion() == 1:
             print("Preparación")
         elif self.get_presentacion() == 2:

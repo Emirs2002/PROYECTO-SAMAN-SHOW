@@ -4,7 +4,7 @@ from tools import *
 
 ### CALCULAR PROMEDIO DE GASTO DE CLIENTES ###
 
-def promedio_gasto(db):
+def promedio_gasto(db):     #db es la lista de clientes
     print("")
     print("*** Promedio de gasto de los clientes ***")
     print("")
@@ -52,23 +52,39 @@ def top_clientes(db):
     print("")
     print("********** ·TOP 3 CLIENTES SAMAN SHOW· **********")
     print("")
-    for cliente in range(3):
-        client = clientes_top[cliente]
-        if client.get_feria() == True:
-            print("")
-            print(f"------------{cliente+1}------------")
-            print("")
-            client.show_client_data()
+    if len(clientes_top) < 3:
+        for cliente in range(len(clientes_top)):
+            client = clientes_top[cliente]
+            if client.get_feria() == True:
+                print("")
+                print(f"------------{cliente+1}------------")
+                print("")
+                client.show_client_data()
+                print("$"+client.get_dinero_pagado())
 
-            print("")
-            print(f"------------------------")
-            print("")
+                print("")
+                print(f"------------------------")
+                print("")
+
+    if len(clientes_top) >= 3:
+        for cliente in range(3):
+            client = clientes_top[cliente]
+            if client.get_feria() == True:
+                print("")
+                print(f"------------{cliente+1}------------")
+                print("")
+                client.show_client_data()
+                print("$"+client.get_dinero_pagado())
+
+                print("")
+                print(f"------------------------")
+                print("")
 
         ### TOP 3 EVENTOS ###
     
 def top_eventos(carrito):
 
-    carrito = quicksort_ingreso(carrito)
+    carrito = quicksort_ingreso(carrito)    #se organiza la lista de eventos por la cantidad de ingreso que generaron
 
     print("")
     print(" ********** TOP 3 EVENTOS **********")
@@ -111,7 +127,7 @@ def top_productos(carrito, lista):
     cont_jugo = 0
     cont_cerveza = 0
 
-
+    #se cuenta la cantidad de veces que aparece el nombre del producto en la lista y se asigna a su respectiva variable
     cont_pizza = carrito.count("Pizza")
     cont_hamburguesa = carrito.count("Hamburguesa")
     cont_dorito = carrito.count("Doritos")
@@ -122,9 +138,9 @@ def top_productos(carrito, lista):
     cont_cerveza = carrito.count("Cerveza")
     
     new_list = []
-    for art in range(len(lista)):
+    for art in range(len(lista)):       #se trabaja con la lista de productos original
         producto = lista[art]
-        if producto.get_nombre_producto() == "Pizza":
+        if producto.get_nombre_producto() == "Pizza":       #se modifica el atributo vendido (cantidad vendida) de cada objeto y se añade a una nueva lista 
             producto.set_vendido(cont_pizza)
             new_list.append(producto)
 
@@ -155,7 +171,7 @@ def top_productos(carrito, lista):
 
     new_list = quicksort_vendido(new_list)    #Ordenar nueva lista con cantidades actualizadas por dichas cantidades
 
-        ## IMPRIMIR NEW_LIST DE MAYOR A MENOR ##
+        ## IMPRIMIR NUEVA LISTA DE MAYOR A MENOR ##
 
     print("")
     print("--------------- TOP 5 PRODUCTOS VENDIDOS ---------------")

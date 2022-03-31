@@ -69,7 +69,7 @@ def main():
 
                 if op1 == 3:     #abrir o cerrar venta de tickets
                     lista_eventos.show_events()  
-                    lista_eventos.change_availability()
+                    lista_eventos.change_availability()   #se le cambia la disponibilidad al evento
 
                 if op1 == 4:
                     break
@@ -77,8 +77,8 @@ def main():
 
         if op == 2:       #MÓDULO 2: Venta de tickets
 
-            clients_db = Taquilla(read_db("clientes.txt", clients_db))
-            client_event, evento, evento_escogido= clients_db.comprar_tickets(lista_events = lista_eventos)
+            clients_db = Taquilla(read_db("clientes.txt", clients_db))    #se carga la lista de clientes
+            client_event, evento, evento_escogido= clients_db.comprar_tickets(lista_events = lista_eventos)    
             
             
             if client_event == -1:    #Cliente declina el pago
@@ -87,18 +87,18 @@ def main():
             else:                     #Cliente acepta realizar el pago
                 print("Su compra ha sido completada exitosamente.")
                 clients_db.get_db().append(client_event)
-                load_db("clientes.txt", clients_db.get_db())
+                load_db("clientes.txt", clients_db.get_db())      #Se añade cliente a la lista de clientes
                 
                 if len(carrito_eventos) == 0:
                     carrito_eventos.append(evento)
                 else:
-                    for eve in range(len(carrito_eventos)):
+                    for eve in range(len(carrito_eventos)):    #Añadir evento comprado con el atributo ingreso actualizado
                         event = carrito_eventos[eve]
                         if event.get_nombre_evento().lower().capitalize() == evento_escogido:
-                            carrito_eventos.pop(eve)
+                            carrito_eventos.pop(eve)     #se borra el objeto anterior y se añade el nuevo a la lista
                             break
                 
-                    carrito_eventos.append(evento)
+                    carrito_eventos.append(evento)          #Lista de eventos para el módulo 5
                 
 
         if op == 3:      #MÓDULO 3: Gestión de artículos de la feria
@@ -110,28 +110,28 @@ def main():
                             \n4.-Volver al menú
                             \n-->''')          
                 if op3 == 1:
-                    lista_articulos.show_products()
+                    lista_articulos.show_products()     #Mostrar todos los productos con su respectiva información
                 
-                if op3 == 2:                    
+                if op3 == 2:                    #Buscar productos por un filtro específico
                     filtro = check_op(1, 3, '''Ingrese por cuál filtro desea buscar:
                                     \n1.-Nombre
                                     \n2.-Tipo   
                                     \n3.-Precios
                                     \n-->''')
 
-                    lista = Feria(lista_articulos.search_product(filtro))
+                    lista = Feria(lista_articulos.search_product(filtro))       
 
-                    if lista.get_db() == []:
+                    if lista.get_db() == []:      #si devuelve una lista vacía es que la información introducida no se encuentra en la base de datos
                         print("")
                         print("***  Error: la información que ha ingresado no se encuentra en la base de datos, intente nuevamente  ***")
                         print("")  
                     else: 
-                        lista.show_products()
+                        lista.show_products()       #Si devuelve una lista llena, se muestran
 
 
                 if op3 == 3:
                     lista_articulos.show_products()
-                    lista_articulos = Feria(lista_articulos.delete_product())
+                    lista_articulos = Feria(lista_articulos.delete_product())           #Se borra un producto de la lista
 
                 if op3 == 4:                  
                     break
@@ -139,33 +139,33 @@ def main():
 
         if op == 4:      # MÓDULO 4: Compra de comida
 
-            clients_db = Feria(read_db("clientes.txt", clients_db))
-            id_confirmation = clients_db.check_cedula()
+            clients_db = Feria(read_db("clientes.txt", clients_db))     #la base de datos de clientes se convierte a clase Feria para aplicarle los métodos de dicha clase
+            id_confirmation = clients_db.check_cedula()         #se valida que el cliente haya comprado un ticket en taquilla
 
-            if id_confirmation == -1:
+            if id_confirmation == -1:           #devuelve -1 de no haber comprado
                 print("")
                 print("Para comprar en la feria necesita haber comprado en la taquilla.")
                 print("")
 
-            else:
+            else:           #de haber comprado se muestran los productos y se procede a comprar
                 clients_list = clients_db.get_db()
                 lista_articulos.show_products()
                 lista_articulos, cliente, pagado, carrito_productos= lista_articulos.comprar_comida(id_confirmation, clients_list, carrito_productos)
                 
-                if pagado == True:
+                if pagado == True:          #si acepta realizar el pago se devuelve pagado como True y se actualiza la lista de productos
                     lista_articulos = Feria(lista_articulos)
 
-                    for client in range(len(clients_db.get_db())):
+                    for client in range(len(clients_db.get_db())):      
                         c = clients_db.get_db()[client]
                         if c.get_cedula() == id_confirmation:
-                            clients_db.get_db().pop(client)
+                            clients_db.get_db().pop(client)         #se borra el cliente con el atributo "dinero_pagado" desactualizado
                             break
 
                     clients_db.get_db().append(cliente)           #retorna clientre para añadir el coste de la compra al atributo "dinero_pagado" 
                     load_db("clientes.txt", clients_db.get_db())
 
                 elif pagado == False:
-                    lista_articulos = Feria(lista_articulos)
+                    lista_articulos = Feria(lista_articulos)            #de no realizar el pago se devuelve la lista sin modificar
 
         if op == 5:  # MÓDULO 5: Estadísticas
             

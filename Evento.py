@@ -7,8 +7,8 @@ class Evento():
         self.__fecha = fecha                        
         self.__precio = precio
         self.__tipo = tipo
-        self.__disponibilidad = disponibilidad
-        self.__ingreso = ingreso
+        self.__disponibilidad = disponibilidad      #indica si el evento está abierto o cerrado
+        self.__ingreso = ingreso        #cantidad de dinero que se recibe por un evento
     
     def get_nombre_evento(self):
         return self.__nombre_evento

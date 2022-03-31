@@ -4,7 +4,7 @@ class Producto():
         self.__clasificacion = clasificacion
         self.__precio = precio
         self.__cantidad = cantidad
-        self.__vendido = vendido
+        self.__vendido = vendido        #cantidad de unidades vendidas
 
     def get_nombre_producto(self):
         return self.__nombre_producto

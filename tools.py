@@ -10,6 +10,7 @@ from Bebida import Bebida
 
 
 #validar palabras
+
 def check_let(msg):
     while True:
         print("")
@@ -22,6 +23,7 @@ def check_let(msg):
     return word
 
 #validar números (general)
+
 def check_num(msg):
     while True:
         print("")
@@ -33,7 +35,7 @@ def check_num(msg):
             continue    
     return num
 
-#validar números en un rango de números específico
+#validar números en un rango específico
 
 def check_op(lim1, lim2, msg):
     while True:
@@ -89,7 +91,7 @@ def assign_event(lista_events):
             layout = db["events"][event]["layout"]    #ITERAR EN EL DICCIONARIO LAYOUT
             for tipo, asiento in layout.items():
                 if tipo == "general":
-                    matriz_general = matrix(asiento[0], asiento[1])   
+                    matriz_general = matrix(asiento[0], asiento[1])   #se hacen las matrices para asientos generales y vip
                     
                 elif tipo == "vip":
                     matriz_vip = matrix(asiento[0], asiento[1])  
@@ -119,29 +121,6 @@ def matrix(filas, columnas):
 
 	return matrix
 
-###### DETERMINAR EL FACTORIAL DE UN NÚMERO ######  
-
-def factorial(num):
-    if num == 1:
-        return num
-    else:
-        return factorial(num-1)*num
-
-### Determinar si un número dado es vampiro ######
-
-def check_vampire(num): 
-    longitud = len(str(num))
-
-    if longitud % 2 != 0:  
-        return False
-    else:
-        n = factorial(longitud) 
-        r = factorial(longitud//2)
-        n_r = factorial(longitud - (longitud//2))
-
-        resultado = (n/(r*(n_r)))     # FÓRMULA DE COMBINACIONES
-                     
-   
 ######## Adquirir la información del API para los productos #######
 
 def assign_producto(lista_products):
@@ -158,7 +137,7 @@ def assign_producto(lista_products):
                 alimento = Alimento(nombre_producto=db["food_fair_inventory"][art]["name"], clasificacion=db["food_fair_inventory"][art]["type"], precio=db["food_fair_inventory"][art]["price"], presentacion=db["food_fair_inventory"][art]["presentation"], cantidad = db["food_fair_inventory"][art]["amount"], vendido = 0)
                 lista_products.append(alimento)
             elif db["food_fair_inventory"][art]["type"] == 2:
-                cantidad = int(db["food_fair_inventory"][art]["amount"])//3
+                cantidad = int(db["food_fair_inventory"][art]["amount"])//3     #se divide el inventario en 3 cantidades iguales para los tres tamaños de las bebidas
                 lista_cantidades = [cantidad, cantidad, cantidad]
                 bebida = Bebida(nombre_producto=db["food_fair_inventory"][art]["name"], clasificacion=db["food_fair_inventory"][art]["type"], precio=db["food_fair_inventory"][art]["price"], cantidad = lista_cantidades, vendido=0)
                 lista_products.append(bebida)

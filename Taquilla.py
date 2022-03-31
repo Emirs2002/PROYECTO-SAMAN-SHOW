@@ -23,7 +23,7 @@ class Taquilla():
             print("")
             print(f" --------- Evento {eve+1} -----------")
             print("")
-            if evento.get_disponibilidad() == True:
+            if evento.get_disponibilidad() == True:     #de estar abiertos, se muestran
                 if evento.get_tipo() == 1:
                     evento.show_musical()
                 elif evento.get_tipo() == 2:
@@ -88,7 +88,6 @@ class Taquilla():
 
         lista_events = self.__db                   
                                 
-                                #NOTE COMENTAR TODA ESTA PARTE DEL CÓDIGO
 
     #########   T I P O   ########  
 
@@ -101,16 +100,16 @@ class Taquilla():
             for event in range(len(lista_events)):
                 evento = lista_events[event]
                 if evento.get_tipo() == op: 
-                    lista_tipo.append(evento)
+                    lista_tipo.append(evento)   #se busca el objeto por el nombre, si se encuentra se añade a la lista vacía
                 else:
                     continue
             
-            return lista_tipo
+            return lista_tipo       #de encontrarse, devuelve la lista con el objeto, sino devuelve la lista vacía
                     
 
     #######   F E C H A   #######     
         if num == 2: 
-            lista_fecha = []
+            lista_fecha = []       
 
             year = check_num("Ingrese el año del evento:\n==>")
             year = str(year)
@@ -118,12 +117,12 @@ class Taquilla():
             mes = check_num("Ingrese el mes del evento (Intoducir dos dígitos. Ejemplo: abril = '04'):\n==>")
             
             mes = str(mes)
-            print(year+"-"+mes)
+            
             for event in range(len(lista_events)): 
                 evento = lista_events[event]
-                lista = evento.get_fecha().split("-")
+                lista = evento.get_fecha().split("-")       #se crea una lista donde en el índice 0 está el añor y en el índice 1 está el mes
                 
-                if lista[0] == year and lista[1] == mes:
+                if lista[0] == year and lista[1] == mes:        
                     lista_fecha.append(evento)
             
             return lista_fecha
@@ -158,9 +157,13 @@ class Taquilla():
             
             return lista_nombre
 
-        ###########   MÓDULO 2 - COMPRA DE TICKETS ###########
 
-    def comprar_tickets(self, lista_events):            #ANCHOR COMPRAR_TICKETS
+        ###########   MÓDULO 2  ###########
+
+
+    def comprar_tickets(self, lista_events):            
+
+        # Se pide datos personales del cliente # 
         
         name = check_let("Ingrese su nombre:\n-->").lower().capitalize()
         
@@ -172,7 +175,6 @@ class Taquilla():
 
         ### Enseñar los asientos del evento que ingrese el cliente ###  
         
-        
         inside_db = False
         while inside_db == False:
 
@@ -181,12 +183,12 @@ class Taquilla():
             lista = lista_events.get_db()
             for eve in range(len(lista)):
                 evento = lista[eve]
-                if evento.get_nombre_evento().lower().capitalize() == evento_escogido and evento.get_disponibilidad() == True:
+                if evento.get_nombre_evento().lower().capitalize() == evento_escogido and evento.get_disponibilidad() == True:  #si se encuentra en la lista y está abierto, se muestran los asientos
                     inside_db = True
                     print(f'''-Asientos:''') 
                     evento.show_asientos()
 
-                    matriz_general = evento.get_asientos_general()
+                    matriz_general = evento.get_asientos_general()      #se guardan las matrices en sus respectivas variables para poder modificarlas
                     matriz_vip = evento.get_asientos_vip()
                                         
             if inside_db == False: 
@@ -208,10 +210,12 @@ class Taquilla():
 
         cont = 0    #esto es para asegurar que la persona escoja el número de asientos según la cantidad de tickets
         
-                            ######SELECCIÓN DE ASIENTOS#####  
+                            ######      SELECCIÓN DE ASIENTOS       #####  
         
         asientos= []       #Lista de asientos del cliente                  
-        while tickets > cont:      
+        while tickets > cont:   
+
+                # ASIENTOS GENERAL
 
             if tipo_asiento == 1:      
                 asiento = input('''Ingrese el asiento que desea (Ejemplo: A6. Ingresar 'A6'):
@@ -221,13 +225,14 @@ class Taquilla():
                     for spot in range(len(matriz_general[fila])):
                         if matriz_general[fila][spot] == asiento:
                             inside_asiento = True
-                            asientos.append(matriz_general[fila][spot])
+                            asientos.append(matriz_general[fila][spot])    #Al elegir los asientos, estos se cambian por una X
                             matriz_general[fila][spot] = "X"
                             cont += 1
 
-                if inside_asiento == False:   
+                if inside_asiento == False:   #De no encontrarse el asiento ingresado pro el usuario
                     print("El asiento está ocupado. Ingrese otro.")
                     
+            # ASIENTOS VIP
         
             elif tipo_asiento == 2:   
                 asiento = input('''Ingrese el asiento que desea (Ejemplo: A1. Ingresar 'A1'):
@@ -264,7 +269,7 @@ class Taquilla():
                         subtotal = precios[1]*tickets
                         costo = (precios[1]*tickets)+iva
                         
-        client = Cliente(cedula = cedula, nombre = name, edad = age, dinero_pagado = costo, feria = False)
+        client = Cliente(cedula = cedula, nombre = name, edad = age, dinero_pagado = costo, feria = False)   #Asignar atributos al cliente
 
 
             ###### MOSTRAR FACTURA #######        
@@ -281,8 +286,6 @@ class Taquilla():
             print(f"->1 Entrada {evento_escogido}     ${subtotal/tickets}" )
         print("")
         print(f"*Subtotal: ${subtotal}")
-        #print("-------")
-        #print(f"*Descuento: -{descuento}")
         print("-------")
         print(f"*IVA: +{iva}")
         print("-------")

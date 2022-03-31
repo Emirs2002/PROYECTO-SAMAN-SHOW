@@ -4,8 +4,8 @@ class Cliente():
         self.__cedula = cedula       
         self.__nombre = nombre
         self.__edad = edad
-        self.__dinero_pagado = dinero_pagado
-        self.__feria = feria
+        self.__dinero_pagado = dinero_pagado      #Acumula el dinero que gasta el cliente entre la feria y la taquilla
+        self.__feria = feria         #Booleano: indica si el cliente compró en la feria
         
  
     def get_nombre(self):
@@ -23,7 +23,7 @@ class Cliente():
     def set_dinero_pagado(self, new_dinero_pagado):
         self.__dinero_pagado = new_dinero_pagado
     
-    def get_feria(self):
+    def get_feria(self):           
         return self.__feria
     
     def set_feria(self, new_feria):
